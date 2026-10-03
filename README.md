@@ -29,7 +29,7 @@ Para disponer de todos estos plugins y skills globales en cualquier otro ordenad
 New-Item -ItemType Directory -Force -Path "$HOME\.gemini\config"
 
 # 2. Clonar este repositorio como la carpeta 'plugins'
-git clone <URL_DE_TU_REPOSITORIO> "$HOME\.gemini\config\plugins"
+git clone https://github.com/Pipin333/agent-plugins.git "$HOME\.gemini\config\plugins"
 ```
 
 ### En Linux / macOS (Bash / Zsh)
@@ -38,7 +38,7 @@ git clone <URL_DE_TU_REPOSITORIO> "$HOME\.gemini\config\plugins"
 mkdir -p ~/.gemini/config
 
 # 2. Clonar el repositorio
-git clone <URL_DE_TU_REPOSITORIO> ~/.gemini/config/plugins
+git clone https://github.com/Pipin333/agent-plugins.git ~/.gemini/config/plugins
 ```
 
 Antigravity detecta y carga de forma automática los plugins y sus skills asociadas al iniciarse en la nueva máquina.
