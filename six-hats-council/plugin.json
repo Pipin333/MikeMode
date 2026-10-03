@@ -1,0 +1,9 @@
+{
+  "name": "six-hats-council",
+  "version": "1.0.0",
+  "description": "Metodología de los 6 Sombreros para Pensar de Edward de Bono adaptada a deliberación técnica y arquitectura de software con un único LLM.",
+  "author": {
+    "name": "Antigravity Pair Programmer"
+  },
+  "license": "MIT"
+}

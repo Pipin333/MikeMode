@@ -1,0 +1,9 @@
+{
+  "name": "doc-guardian",
+  "version": "1.0.0",
+  "description": "Garantiza que cualquier agente o modelo de IA audite y mantenga actualizado el README y la documentación técnica cada vez que realiza cambios en el código.",
+  "author": {
+    "name": "Antigravity Pair Programmer"
+  },
+  "license": "MIT"
+}
