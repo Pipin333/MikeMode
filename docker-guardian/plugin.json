@@ -1,0 +1,11 @@
+{
+  "name": "docker-guardian",
+  "version": "1.0.0",
+  "displayName": "Docker Guardian",
+  "description": "Garantiza que cualquier proyecto sea containerizado con Docker/Compose, permitiendo clonarlo desde GitHub y ejecutarlo de forma idéntica en cualquier máquina o sistema operativo con un solo comando.",
+  "suggestedPrompts": [
+    "Containeriza este proyecto para que corra en cualquier máquina tras clonar de GitHub",
+    "Audita y genera Dockerfile multi-stage y docker-compose.yml para este repositorio",
+    "Configura Dev Containers y Docker Quickstart en el README"
+  ]
+}

@@ -263,15 +263,18 @@ def check_docs(target_dir: Path):
 
 
 def init_rules(target_dir: Path):
-    """Inyecta las directivas de documentación en AGENTS.md y GEMINI.md del proyecto."""
-    rule_content = """# Reglas de Proyecto: Mantenimiento de Documentación Obligatorio (Doc-Guardian)
+    """Inyecta las directivas de documentación y estándares de código en AGENTS.md y GEMINI.md del proyecto."""
+    rule_content = """# Reglas de Proyecto: Documentación y Estándares de Código (Doc-Guardian)
 
 ## Mandato para Agentes de IA y Asistentes de Código
 Cada vez que realices cambios, adiciones o refactorizaciones en este proyecto:
-1. **Auditoría de Impacto**: Verifica si tus cambios modifican dependencias, variables de entorno (.env), comandos de ejecución, scripts de package.json o endpoints de API.
-2. **Actualización del README**: Es OBLIGATORIO actualizar el `README.md` (y `docs/` si corresponde) en el mismo turno en el que se modifica el código.
-3. **Sincronización de Variables**: Si usas nuevas variables de entorno en código, añádelas con valores descriptivos a `.env.example` y a la tabla de configuración en `README.md`.
-4. **Cero Deuda Documental**: No concluyas tu respuesta sin reportar las secciones del README actualizadas bajo el título `### 📝 Documentación Actualizada`.
+1. **Estándares de Código y Docstrings**:
+   - En Python: Es OBLIGATORIO cumplir con PEP 8 (estilo, tipado, nomenclatura snake_case) y PEP 257 (docstrings detallados con triples comillas en toda función, clase y módulo público).
+   - En otros lenguajes: Cumplir con sus equivalentes oficiales (TSDoc/JSDoc en TypeScript/JS, rustdoc en Rust, godoc en Go, Javadoc en Java).
+2. **Auditoría de Impacto**: Verifica si tus cambios modifican dependencias, variables de entorno (.env), comandos de ejecución, scripts de package.json o endpoints de API.
+3. **Actualización del README**: Es OBLIGATORIO actualizar el `README.md` (y `docs/` si corresponde) en el mismo turno en el que se modifica el código.
+4. **Sincronización de Variables**: Si usas nuevas variables de entorno en código, añádelas con valores descriptivos a `.env.example` y a la tabla de configuración en `README.md`.
+5. **Cero Deuda Documental**: No concluyas tu respuesta sin reportar las secciones del README actualizadas y confirmar cumplimiento de estándares bajo el título `### 📝 Documentación Actualizada y Estándares`.
 """
     agents_file = target_dir / "AGENTS.md"
     gemini_file = target_dir / "GEMINI.md"
