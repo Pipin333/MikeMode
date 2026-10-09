@@ -397,8 +397,10 @@ Este proyecto utiliza **Doc-Guardian**. Cualquier cambio en dependencias, variab
 
 def main():
     parser = argparse.ArgumentParser(description="Doc-Guardian: Auditoría y sincronización de documentación para agentes de IA.")
-    parser.add_argument("action", choices=["check", "init", "scaffold"], default="check", nargs="?", help="check: audita el estado; init: inyecta reglas de agente; scaffold: genera README.md base")
+    parser.add_argument("action", choices=["check", "init", "scaffold", "pdf"], default="check", nargs="?", help="check: audita el estado; init: inyecta reglas de agente; scaffold: genera README.md base; pdf: compila Markdown a PDF editorial de alta resolución")
+    parser.add_argument("file", nargs="?", default=None, help="Archivo Markdown de entrada para la acción 'pdf' (ej. README.md o informe.md)")
     parser.add_argument("--path", "-p", default=".", help="Ruta del proyecto a evaluar (por defecto: actual)")
+    parser.add_argument("--output", "-o", default=None, help="Ruta del PDF de salida para la acción 'pdf'")
 
     args = parser.parse_args()
     target_path = Path(args.path).resolve()
@@ -410,6 +412,21 @@ def main():
         sys.exit(0)
     elif args.action == "scaffold":
         scaffold_readme(target_path)
+        sys.exit(0)
+    elif args.action == "pdf":
+        input_file = args.file or (target_path / "README.md")
+        input_path = Path(input_file).resolve()
+        if not input_path.exists():
+            print(f"❌ Error: El archivo Markdown no existe: {input_path}", file=sys.stderr)
+            sys.exit(1)
+        
+        script_dir = Path(__file__).parent
+        if str(script_dir) not in sys.path:
+            sys.path.insert(0, str(script_dir))
+        from generate_perfect_pdf import generate_perfect_pdf
+
+        pdf_res = generate_perfect_pdf(str(input_path), args.output)
+        print(f"✅ PDF editorial generado exitosamente: {pdf_res}")
         sys.exit(0)
 
 

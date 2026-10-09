@@ -13,6 +13,7 @@ Diseñado tanto para agentes de **Antigravity** como para cualquier otro modelo 
 - **`skills/doc-guardian/`**:
   - `SKILL.md`: Protocolo paso a paso para el agente (estándares PEP 8 y PEP 257, detección de impacto, auditoría de dependencias, variables de entorno y edición quirúrgica de documentación).
   - `scripts/doc_guard.py`: Script CLI multiplataforma en Python para auditar proyectos y detectar código modificado sin documentar o sin reglas.
+  - `scripts/generate_perfect_pdf.py`: Motor editorial para compilar cualquier archivo Markdown en PDFs ejecutivos de alta definición con paginación estricta y Playwright.
   - `references/universal_agent_rules.md`: Guía y fragmentos listos para usar en `AGENTS.md`, `CLAUDE.md`, `.cursorrules` y `.github/copilot-instructions.md`.
   - `references/readme_template.md`: Plantilla estándar y modular para nuevos READMEs.
 
@@ -40,6 +41,9 @@ python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/skills/doc-guardian/s
 
 # Instalar reglas universales (AGENTS.md / GEMINI.md) en el proyecto actual:
 python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/skills/doc-guardian/scripts/doc_guard.py init
+
+# Exportar cualquier Markdown a PDF editorial de alta definición:
+python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/skills/doc-guardian/scripts/doc_guard.py pdf <archivo.md> [-o resultado.pdf]
 ```
 
 ---

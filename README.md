@@ -10,6 +10,7 @@ Repositorio centralizado con los plugins y skills globales para **Google Antigra
 | :--- | :--- | :--- |
 | **`doc-guardian`** | Guardián de documentación técnica y estándares de código (PEP 8, PEP 257 o equivalentes). | Reglas obligatorias (`AGENTS.md`), estándares de docstrings y estilo, scripts (`doc_guard.py`). |
 | **`docker-guardian`** | Guardián de containerización y portabilidad universal con Docker/Compose para GitHub. | Reglas obligatorias (`AGENTS.md`), plantillas multi-stage, devcontainer, scripts (`docker_guard.py`). |
+| **`debug-guardian`** | Guardián de depuración rigurosa (RCA), testing (TDD), no-regresiones e higiene de código. | Reglas obligatorias (`AGENTS.md`), metodología RCA, patrones de test, scripts (`debug_guard.py`). |
 | **`impeccable`** | Kit de diseño frontend y estándares de calidad visual anti-slop (por Paul Bakaus). | Skills de auditoría visual (`critique`, `audit`, `polish`), diseño, reglas UI. |
 | **`six-hats-council`** | Metodología de los Seis Sombreros de Bono adaptada para deliberación técnica y arquitectura de software. | Skills de análisis multidimensional previo a planes complejos. |
 | **`science`** | Colección exhaustiva de herramientas y skills científicas y biomédicas. | Conectores a PDB, ChEMBL, AlphaFold, PubMed, Ensembl, UniProt, etc. |

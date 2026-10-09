@@ -1,0 +1,11 @@
+services:
+  doc-guardian:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: doc-guardian-suite
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    command: ["python", "skills/doc-guardian/scripts/doc_guard.py", "check"]

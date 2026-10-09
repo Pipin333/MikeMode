@@ -1,0 +1,11 @@
+{
+  "name": "debug-guardian",
+  "version": "1.0.0",
+  "displayName": "Debug Guardian",
+  "description": "Garantiza análisis de causa raíz, desarrollo guiado por pruebas (TDD), prevención de regresiones e higiene estricta de código sin residuos de depuración.",
+  "suggestedPrompts": [
+    "Audita este bug con Debug-Guardian, encuentra la causa raíz y añade un test de regresión",
+    "Verifica que el código no tenga logs de debug residuales y que todos los tests pasen",
+    "Genera una suite de tests robusta con cobertura de casos límite para este módulo"
+  ]
+}

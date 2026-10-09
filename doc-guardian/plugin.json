@@ -1,7 +1,7 @@
 {
   "name": "doc-guardian",
-  "version": "1.0.0",
-  "description": "Garantiza que cualquier agente o modelo de IA audite y mantenga actualizado el README y la documentación técnica cada vez que realiza cambios en el código.",
+  "version": "1.1.0",
+  "description": "Garantiza que cualquier modelo de IA audite y mantenga actualizado el README y la documentación técnica ante cambios en el código, con estándares PEP 8/257 y suite de exportación editorial a PDF.",
   "author": {
     "name": "Antigravity Pair Programmer"
   },

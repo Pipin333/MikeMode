@@ -128,3 +128,25 @@ python <ruta_plugin>/skills/doc-guardian/skills/doc-guardian/scripts/doc_guard.p
 ```
 
 Para más detalles sobre cómo aplicar estas reglas a **Cursor, Claude Code, GitHub Copilot o Windsurf**, consulta la guía de [Reglas Universales para Modelos de IA](./references/universal_agent_rules.md).
+
+---
+
+## 📑 Suite Editorial de Exportación a PDF (`generate_perfect_pdf`)
+
+Doc-Guardian incluye un motor de compilación editorial de alta resolución basado en **Playwright** y **Markdown-It** para transformar cualquier archivo Markdown (`README.md`, informes de auditoría, especificaciones de arquitectura, propuestas comerciales o preprints técnicos) en documentos PDF listos para impresión o presentación ejecutiva.
+
+### Características del Motor PDF:
+- **Paginación Estricta y Predecible:** Permite dividir páginas temáticas mediante separadores `---`, garantizando exactamente una sección por página sin cortes antiestéticos.
+- **Incrustación Atómica de Imágenes (Base64):** Convierte capturas e imágenes locales a Data URIs para evitar bloqueos por políticas de origen cruzado en Chromium headless.
+- **Sanitización Automática:** Filtra emojis informales y rutas locales privadas antes de renderizar.
+- **Tipografía Editorial:** Encabezados institucionales, paginación dinámica (`Página X de Y`), tablas estilizadas y bloques de código protegidos contra particiones de página (`page-break-inside: avoid`).
+- **Soporte Matemático:** Renderizado nítido de fórmulas KaTeX / MathJax 3.
+
+### Comandos Disponibles:
+```bash
+# 1. Exportar mediante el comando integrado de Doc-Guardian:
+python <ruta_plugin>/skills/doc-guardian/scripts/doc_guard.py pdf <archivo.md> [-o salida.pdf]
+
+# 2. Ejecutar directamente el generador especializado:
+python <ruta_plugin>/skills/doc-guardian/scripts/generate_perfect_pdf.py <archivo.md> [salida.pdf]
+```
