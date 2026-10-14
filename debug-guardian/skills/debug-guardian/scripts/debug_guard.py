@@ -65,7 +65,7 @@ def get_changed_files(target_dir: Path) -> set[Path]:
                 if ' -> ' in filename:
                     filename = filename.split(' -> ')[1]
                 p = target_dir / filename
-                if p.is_file():
+                if p.is_file() and p.suffix.lower() in {'.py', '.js', '.ts', '.jsx', '.tsx', '.go', '.rs', '.java', '.cs', '.cpp', '.c'}:
                     changed.add(p)
         except Exception:
             pass
@@ -88,6 +88,10 @@ def scan_file_for_residues(file_path: Path) -> list[tuple[int, str, str]]:
     # No auditar archivos de pruebas si usan console.log intencionalmente
     name_lower = file_path.name.lower()
     is_test_file = any(name_lower.endswith(ext) for ext in TEST_EXTENSIONS) or 'test' in file_path.parts
+
+    # Omitir scripts auditores guardianes que contienen definiciones literales de regex
+    if name_lower in {'debug_guard.py', 'architect_guard.py', 'frontend_guard.py'}:
+        return residues
 
     try:
         content = file_path.read_text(encoding='utf-8', errors='ignore')

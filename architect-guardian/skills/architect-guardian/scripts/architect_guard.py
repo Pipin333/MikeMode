@@ -79,6 +79,14 @@ SMELL_PATTERNS: List[Tuple[re.Pattern, str, str]] = [
         "Shallow / Vague Class",
         "Clase con sufijo ambiguo ('Manager', 'Helper', 'Utility'); evaluar si es un módulo profundo real.",
     ),
+    (
+        re.compile(
+            r"(?://|#)\s*(?:iteramos|iterar sobre|recorrer la lista|funcion que|función que|asignamos|asignar valor|comprobamos si)\b",
+            re.IGNORECASE,
+        ),
+        "AI Slop Comment",
+        "Comentario redundante de IA que explica el cómo en vez de dejar que el código hable por sí mismo.",
+    ),
 ]
 
 

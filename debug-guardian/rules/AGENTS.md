@@ -23,6 +23,13 @@ Cada vez que soluciones un error, implementes una funcionalidad o refactorices c
 4. **Verificación Automatizada Ejecutable**:
    - Si el proyecto cuenta con un entorno o comando de pruebas (`pytest`, `vitest`, `npm test`, `cargo test`, `go test`, `mvn test`), es OBLIGATORIO ejecutar las pruebas mediante la terminal y verificar que concluyan con código de salida 0.
 
+5. **Optimización Cuantitativa Empírica (*Hillclimb*)**:
+   - **Prohibidas "optimizaciones" teóricas o especulativas**: Jamás propongas ni apliques cambios de rendimiento asumiendo a ciegas que un algoritmo o bucle será "más rápido".
+   - **Medición Científica Obligatoria**: Todo reclamo de mejora de rendimiento (tiempo de CPU, memoria, I/O) debe acompañarse de:
+     1. Medición de línea base (*baseline*) previa al cambio.
+     2. Medición posterior bajo idéntica carga y entorno.
+     3. Evidencia cuantitativa irrefutable (ej. "de 45ms a 12ms", "reducción de 40% en memoria") certificando que los tests de regresión se mantienen en verde.
+
 ---
 
 ## Protocolo de Reporte Final

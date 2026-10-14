@@ -39,6 +39,11 @@ Cada vez que crees, modifiques, rediseñes o refactorices interfaces de usuario,
      5. *Parcial o Deshabilitado*: Indicación visual de indisponibilidad.
    - **Cero Layout Shift (CLS = 0)**: Todo elemento `<img>`, `<video>` o iframe debe tener atributos `width` y `height` explícitos, o la propiedad CSS `aspect-ratio` para evitar saltos de pantalla durante la carga.
 
+5. **Paridad Visual en Refactorizaciones UI (*Visual Parity*)**:
+   - Al refactorizar componentes existentes, migrar CSS clásico a Tailwind, o reestructurar vistas (ej. en React o HTML/JS), es obligatorio garantizar la **equivalencia visual exacta píxel a píxel**.
+   - Prohibido alterar espaciados, proporciones, alineaciones o jerarquía tipográfica bajo el pretexto de una "limpieza de código", salvo petición expresa del usuario.
+   - Verifica el comportamiento responsivo en los viewports móvil (375px) y escritorio (1440px) para evitar saltos y scroll horizontal involuntario.
+
 ---
 
 ## Protocolo de Reporte Final

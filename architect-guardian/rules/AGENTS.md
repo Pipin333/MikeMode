@@ -30,6 +30,14 @@ Cada vez que diseñes, refactorices, implementes o revises código o arquitectur
      - **Eje 1: Estándares y Fowler Code Smells**: Evalúa *Mysterious Name*, *Duplicated Code*, *Feature Envy*, *Data Clumps*, *Primitive Obsession*, *Repeated Switches*, *Shotgun Surgery*, *Speculative Generality*, *Message Chains* y *Refused Bequest*.
      - **Eje 2: Fidelidad Estricta a la Especificación**: Verifica exhaustivamente: (a) requerimientos solicitados que hayan quedado sin implementar o a medias; (b) código no solicitado que represente *scope creep*; (c) lógica aparentemente implementada que no satisfaga los criterios de aceptación exactos.
 
+5. **Anti-Slop, No-Comments y Código Auto-Explicativo**:
+   - **Prohibido el "AI Slop"**: Prohibido ensuciar el código con comentarios triviales, redundantes o patronizantes generados por IA (ej. `// iterar sobre la lista`, `# función que valida el email`, `// asignamos valor a variable`). El código debe auto-explicarse mediante tipos robustos y nombres de dominio precisos.
+   - **Regla Estricta para Comentarios**: Los comentarios solo son válidos si documentan un invariante de negocio no evidente, una anomalía de una librería externa o una restricción de hardware/SO.
+
+6. **Cálculo de Radio de Explosión (*Blast Radius*) y Arqueología "Why"**:
+   - **Mapeo de Radio de Impacto**: Antes de modificar una función nuclear, contrato compartido, modelo de base de datos o migración (ej. Alembic/SQLAlchemy), mapea exhaustivamente todos los puntos de llamada (*call sites*) aguas abajo para prevenir roturas colaterales.
+   - **Arqueología de Código ("Why")**: Prohibido asumir que código legado está "mal hecho" o "desactualizado" sin antes revisar el historial (`git log`, mensajes de commits previos y PRs). Entiende *por qué* se tomó esa decisión técnica antes de intentar reescribirla.
+
 ---
 
 ## Protocolo de Reporte Final
