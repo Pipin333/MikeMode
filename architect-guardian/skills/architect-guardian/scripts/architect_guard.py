@@ -150,6 +150,8 @@ def get_git_diff_lines(target_path: Path) -> List[Tuple[Path, int, str]]:
             cwd=target_path,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=False,
         )
         archivo_actual: Optional[Path] = None
@@ -176,6 +178,8 @@ def get_git_diff_lines(target_path: Path) -> List[Tuple[Path, int, str]]:
             cwd=target_path,
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             check=False,
         )
         for line in status_res.stdout.splitlines():
