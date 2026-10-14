@@ -1,0 +1,12 @@
+{
+  "name": "architect-guardian",
+  "version": "1.0.0",
+  "displayName": "Architect Guardian",
+  "description": "Guardián de arquitectura de software, diseño de módulos profundos, modelado de dominio (DDD), descomposición en grafos de tareas (DAG) y revisión de código en dos ejes.",
+  "suggestedPrompts": [
+    "Diseña la arquitectura de este módulo siguiendo principios de módulos profundos",
+    "Descompón esta funcionalidad en un grafo de tickets con dependencias y cortes verticales",
+    "Realiza una revisión de código en dos ejes: estándares/code smells y fidelidad a la especificación",
+    "Audita la fricción arquitectónica y simplifica las costuras de este módulo"
+  ]
+}
