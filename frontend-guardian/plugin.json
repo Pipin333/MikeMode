@@ -1,0 +1,12 @@
+{
+  "name": "frontend-guardian",
+  "version": "1.0.0",
+  "displayName": "Frontend Guardian",
+  "description": "Guardián de excelencia frontend: accesibilidad (a11y/WCAG 2.2), diseño basado en tokens, microinteracciones fluidas, gestión de los 5 estados de UI y Core Web Vitals.",
+  "suggestedPrompts": [
+    "Audita la accesibilidad y semántica de este componente con Frontend-Guardian",
+    "Aplica la regla de los 5 estados (Empty, Loading, Error, Success, Partial) a esta vista",
+    "Optimiza el diseño con tipografía fluida clamp() y tokens de espaciado modular",
+    "Revisa animaciones con física natural y soporte para prefers-reduced-motion"
+  ]
+}
