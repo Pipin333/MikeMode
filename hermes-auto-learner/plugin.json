@@ -1,0 +1,9 @@
+{
+  "name": "hermes-auto-learner",
+  "version": "1.0.0",
+  "description": "Motor de destilación en 1 turno y auto-aprendizaje de skills inspirado en NousResearch Hermes Agent, con auto-mutación por fallos (Failure-Driven Mutation) y validación determinista.",
+  "author": {
+    "name": "Antigravity Pair Programmer"
+  },
+  "license": "MIT"
+}
