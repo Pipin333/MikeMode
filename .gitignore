@@ -16,3 +16,10 @@ build/
 target/
 .cache/
 *.tmp
+
+# Graphify generated artifacts
+graphify-out/
+.graphify/
+graph.html
+graph.json
+GRAPH_REPORT.md

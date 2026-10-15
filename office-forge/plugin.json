@@ -1,0 +1,7 @@
+{
+  "name": "office-forge",
+  "version": "1.0.0",
+  "description": "Manipulación y generación profesional de documentos Excel (xlsx), Word (docx), PDF y presentaciones PowerPoint (pptx) con fórmulas dinámicas, estilos ejecutivos y defensas anti-XXE / anti-Zip-bomb.",
+  "author": "Pipin333 & Antigravity",
+  "category": "productivity"
+}

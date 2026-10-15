@@ -1,0 +1,7 @@
+{
+  "name": "graphify",
+  "version": "1.0.0",
+  "description": "Convierte cualquier base de código, documentación y esquemas en grafos de conocimiento interactivos (graph.html) usando AST determinista con Tree-sitter y detección de comunidades. Incluye salvaguardas de Balthasar-2 para control de recursos y .gitignore.",
+  "author": "Pipin333 & Antigravity",
+  "category": "analysis"
+}
