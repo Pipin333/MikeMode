@@ -1,0 +1,7 @@
+{
+  "name": "security-auditor",
+  "version": "1.0.0",
+  "description": "Auditoría de seguridad estática formal y detección determinista de vulnerabilidades (CVEs, OWASP Top 10, Secrets) basada en Semgrep y el marco metodológico de Trail of Bits. Incorpora salvaguardas de Balthasar-2: telemetría desactivada (--metrics=off), límite de recursos y generación de reportes estructurados.",
+  "author": "Pipin333 & Antigravity",
+  "category": "security"
+}
