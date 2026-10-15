@@ -1,18 +1,21 @@
 #!/usr/bin/env python3
 """
-Six Hats Council - Deliberation & Planning CLI Runner.
-Executes Edward de Bono's 6 Thinking Hats methodology using a single LLM engine.
+Six Hats Council & MAGI System - Deliberation & Consensus CLI Runner.
+Executes:
+1. Edward de Bono's 6 Thinking Hats methodology.
+2. Evangelion MAGI Supercomputer Tripartite Consensus (Melchior-1, Balthasar-2, Casper-3).
 
-Can operate with local LLM CLIs (gemini, ollama, codex) or generate structured
+Can operate with local LLM CLIs (gemini, ollama, claude, codex) or generate structured
 deliberation prompts.
 """
 
 import os
+import re
 import sys
 import shutil
 import argparse
 import subprocess
-from typing import Dict, Tuple, Optional
+from typing import Dict, Tuple, Optional, List
 
 # Ensure standard UTF-8 output on Windows
 if sys.platform.startswith("win"):
@@ -87,6 +90,57 @@ HATS = [
     }
 ]
 
+MAGI_NODES = [
+    {
+        "id": "melchior",
+        "name": "MELCHIOR-1",
+        "archetype": "La Científica (⚪ Blanco + 🔵 Azul)",
+        "emoji": "🧠",
+        "focus": "Lógica formal, Deep Modules, complejidad O(n) y consistencia de dominio",
+        "prompt": (
+            "Eres MELCHIOR-1, el primer nodo del supercomputador MAGI de Evangelion. "
+            "Representas a la Dra. Naoko Akagi como CIENTÍFICA: lógica matemática pura, coherencia arquitectónica y rigor estructural. "
+            "Evalúa la modularidad profunda (Ousterhout), complejidad asintótica O(n) y principios de diseño de dominio el siguiente dilema:\n\n{topic}\n\n"
+            "Concluye tu respuesta estrictamente en este formato:\n"
+            "VOTO: [AGREED | DENIED | CONDITIONAL]\n"
+            "MOTIVO: [Justificación concisa en 1 frase]\n"
+            "ESTIPULACIONES: [Requisitos arquitectónicos no negociables si aplica]"
+        )
+    },
+    {
+        "id": "balthasar",
+        "name": "BALTHASAR-2",
+        "archetype": "La Madre / Guardián (⚫ Negro + 🔴 Rojo)",
+        "emoji": "🛡️",
+        "focus": "Seguridad radical, worst-case scenario, blast radius y reversibilidad",
+        "prompt": (
+            "Eres BALTHASAR-2, el segundo nodo del supercomputador MAGI de Evangelion. "
+            "Representas a la Dra. Naoko Akagi como MADRE y PROTECTORA: preservación del sistema, aversión al riesgo y seguridad. "
+            "Evalúa el peor escenario posible (worst-case), radio de explosión (blast radius), plan de rollback y testing determinista para:\n\n{topic}\n\n"
+            "Concluye tu respuesta estrictamente en este formato:\n"
+            "VOTO: [AGREED | DENIED | CONDITIONAL]\n"
+            "MOTIVO: [Justificación concisa en 1 frase]\n"
+            "ESTIPULACIONES: [Salvaguardas obligatorias si aplica]"
+        )
+    },
+    {
+        "id": "casper",
+        "name": "CASPER-3",
+        "archetype": "La Mujer / Disruptora (🟢 Verde + 🟡 Amarillo)",
+        "emoji": "⚡",
+        "focus": "Pragmatismo 80/20, UX delightful, pensamiento lateral y velocidad de entrega",
+        "prompt": (
+            "Eres CASPER-3, el tercer nodo del supercomputador MAGI de Evangelion. "
+            "Representas a la Dra. Naoko Akagi como MUJER y DISRUPTORA: pragmatismo implacable, valor humano, experiencia de usuario y atajos laterales. "
+            "Evalúa la regla 80/20, eliminación de código redundante y simplificación radical para:\n\n{topic}\n\n"
+            "Concluye tu respuesta estrictamente en este formato:\n"
+            "VOTO: [AGREED | DENIED | CONDITIONAL]\n"
+            "MOTIVO: [Justificación concisa en 1 frase]\n"
+            "ESTIPULACIONES: [Requisitos de simplicidad y UX si aplica]"
+        )
+    }
+]
+
 
 def detect_cli() -> Optional[str]:
     """Detect available LLM CLI runner in system PATH."""
@@ -108,7 +162,14 @@ def query_cli(cli_type: str, prompt: str, timeout: int = 90) -> Tuple[bool, str]
         else:
             return False, f"CLI no soportado directamente: {cli_type}"
 
-        res = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        res = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout
+        )
         if res.returncode == 0:
             return True, res.stdout.strip()
         return False, f"Error {cli_type}: {res.stderr.strip()}"
@@ -116,6 +177,101 @@ def query_cli(cli_type: str, prompt: str, timeout: int = 90) -> Tuple[bool, str]
         return False, f"Tiempo de espera agotado ({timeout}s) para {cli_type}"
     except Exception as exc:
         return False, f"Excepción ejecutando {cli_type}: {exc}"
+
+
+def extract_vote(text: str) -> str:
+    """Extract AGREED, DENIED, or CONDITIONAL from response text."""
+    match = re.search(r"VOTO:\s*(AGREED|DENIED|CONDITIONAL)", text, re.IGNORECASE)
+    if match:
+        return match.group(1).upper()
+    if "AGREED" in text.upper():
+        return "AGREED"
+    if "DENIED" in text.upper():
+        return "DENIED"
+    if "CONDITIONAL" in text.upper():
+        return "CONDITIONAL"
+    return "PENDING"
+
+
+def run_magi_deliberation(topic: str, cli_name: Optional[str] = None) -> str:
+    """Run the tripartite MAGI consensus protocol."""
+    active_cli = cli_name or detect_cli()
+    responses: Dict[str, str] = {}
+    votes: Dict[str, str] = {}
+
+    print(f"[*] Iniciando Protocolo de Consenso MAGI (Evangelion)...")
+    if active_cli:
+        print(f"[*] Motor CLI detectado: {active_cli}")
+    else:
+        print("[!] No se detectó CLI interactivo. Generando prompts estructurados para subagentes.")
+
+    for node in MAGI_NODES:
+        print(f" -> Consultando nodo {node['name']} ({node['archetype']})...")
+        formatted_prompt = node["prompt"].format(topic=topic)
+
+        if active_cli:
+            ok, response_text = query_cli(active_cli, formatted_prompt)
+            if not ok:
+                response_text = f"*(Error consultando a {node['name']}: {response_text})*"
+                vote = "DENIED"
+            else:
+                vote = extract_vote(response_text)
+        else:
+            response_text = f"*(Prompt listo para subagente independiente)*\n> {formatted_prompt}"
+            vote = "PENDING"
+
+        responses[node["id"]] = response_text
+        votes[node["id"]] = vote
+
+    # Determinar consenso
+    v_melchior = votes.get("melchior", "PENDING")
+    v_balthasar = votes.get("balthasar", "PENDING")
+    v_casper = votes.get("casper", "PENDING")
+
+    approved_count = sum(1 for v in [v_melchior, v_balthasar, v_casper] if v in ["AGREED", "CONDITIONAL"])
+    if approved_count == 3:
+        consensus_title = "3-0 UNANIMOUS CONSENSUS (APROBADO POR UNANIMIDAD)"
+    elif approved_count == 2:
+        consensus_title = "2-1 MAJORITY DECISION (APROBADO POR MAYORÍA CON CONDICIONES)"
+    elif approved_count <= 1 and all(v != "PENDING" for v in [v_melchior, v_balthasar, v_casper]):
+        consensus_title = "REJECTED (VETO DE LA MAYORÍA DE NODOS)"
+    else:
+        consensus_title = "CONSENSUS GRID READY FOR SUBAGENTS"
+
+    output = [
+        "# 🔮 SISTEMA MAGI: PROTOCOLO DE DELIBERACIÓN TÁCTICA\n",
+        "```",
+        "╔══════════════════════════════════════════════════════════════════════╗",
+        "║                       MAGI SUPERCOMPUTER SYSTEM                      ║",
+        "║                     NERV TOKYO-3 ARCHITECTURE GRID                   ║",
+        "╚══════════════════════════════════════════════════════════════════════╝",
+        "```\n",
+        f"**Dilema Técnico Analizado**: {topic}\n",
+        f"**Estado del Consenso**: `{consensus_title}`\n",
+        "---\n",
+        "## 1. Matriz de Votación de Nodos Soberanos\n",
+        "| Nodo MAGI | Arquetipo / Sombreros | Voto | Dictamen Principal |",
+        "| :--- | :--- | :---: | :--- |",
+        f"| **MELCHIOR-1** | 🧠 Científica (⚪ Blanco + 🔵 Azul) | **{v_melchior}** | Lógica formal y Deep Modules |",
+        f"| **BALTHASAR-2** | 🛡️ Madre (⚫ Negro + 🔴 Rojo) | **{v_balthasar}** | Preservación y mitigación de riesgos |",
+        f"| **CASPER-3** | ⚡ Mujer (🟢 Verde + 🟡 Amarillo) | **{v_casper}** | Pragmatismo 80/20 y experiencia de usuario |",
+        "\n---\n",
+        "## 2. Dictámenes Detallados de los Nodos\n"
+    ]
+
+    for node in MAGI_NODES:
+        output.append(f"### {node['emoji']} {node['name']} ({node['archetype']})")
+        output.append(responses[node["id"]] + "\n")
+
+    output.append("---\n")
+    output.append("## 3. Plan de Acción y Salvaguardas Vinculantes\n")
+    if approved_count >= 2:
+        output.append("- **Aprobado para implementación**: Proceder incorporando las salvaguardas obligatorias señaladas por los nodos disidentes o condicionales.")
+        output.append("- **Registro en ADR**: Si la decisión es de alto coste de reversión, exportar a `docs/adr/`.")
+    else:
+        output.append("- **Acción requerida**: Reformular la propuesta técnica atacando las objeciones de los nodos que votaron DENIED antes de volver a consultar a MAGI.")
+
+    return "\n".join(output)
 
 
 def run_deliberation(topic: str, cli_name: Optional[str] = None) -> str:
@@ -155,8 +311,11 @@ def run_deliberation(topic: str, cli_name: Optional[str] = None) -> str:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Consejo de los 6 Sombreros para Pensar (De Bono)")
+    parser = argparse.ArgumentParser(
+        description="Consejo de los 6 Sombreros para Pensar & Sistema MAGI (Evangelion)"
+    )
     parser.add_argument("topic", nargs="?", help="Tema, pregunta técnica o arquitectura a deliberar")
+    parser.add_argument("--magi", "-m", action="store_true", help="Ejecutar protocolo de consenso tripartito MAGI (Evangelion)")
     parser.add_argument("--cli", choices=["gemini", "ollama", "claude"], help="Forzar un motor CLI específico")
     parser.add_argument("--output", "-o", help="Ruta del archivo Markdown donde guardar el informe")
 
@@ -167,13 +326,17 @@ def main():
         if not sys.stdin.isatty():
             topic = sys.stdin.read().strip()
         else:
-            topic = input("Introduce el tema o decisión técnica para el Consejo de los 6 Sombreros: ").strip()
+            mode_desc = "MAGI (Evangelion)" if args.magi else "6 Sombreros"
+            topic = input(f"Introduce el tema o decisión técnica para el Consejo ({mode_desc}): ").strip()
 
     if not topic:
         print("Error: Se requiere un tema para deliberar.")
         sys.exit(1)
 
-    report = run_deliberation(topic, cli_name=args.cli)
+    if args.magi:
+        report = run_magi_deliberation(topic, cli_name=args.cli)
+    else:
+        report = run_deliberation(topic, cli_name=args.cli)
 
     if args.output:
         with open(args.output, "w", encoding="utf-8") as f:

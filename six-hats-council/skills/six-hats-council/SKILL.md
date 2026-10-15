@@ -1,127 +1,121 @@
 ---
 name: six-hats-council
-description: Deliberación técnica profunda y planificación arquitectónica usando la metodología de los Seis Sombreros para Pensar de Edward de Bono con un único modelo LLM. Úsalo cuando el usuario pida "consultar al consejo", "analizar con los 6 sombreros", "lluvia de ideas crítica antes de planificar", "evaluar pros, contras, riesgos y creatividad", o solicite un análisis multidimensional riguroso antes de presentar un plan de implementación.
+description: Deliberación técnica profunda, consenso democrático estilo MAGI de Evangelion con subagentes concurrentes y metodología de los Seis Sombreros de Bono. Úsalo cuando el usuario pida "consultar a MAGI", "iniciar protocolo MAGI", "votación estilo Evangelion", "consultar al consejo", "analizar con los 6 sombreros" o solicite una evaluación rigurosa antes de tomar decisiones técnicas irreversibles.
 ---
 
-# Consejo de los 6 Sombreros (Six Hats Council)
+# Consejo de Deliberación Técnica: MAGI & Six Hats
 
-Permite al agente ejecutar una sesión de deliberación multidimensional basada en la metodología de los **6 Sombreros para Pensar de Edward de Bono**, utilizando **el mismo modelo LLM** para explorar facetas cognitivas ortogonales antes de sintetizar un plan de implementación definitivo.
+Este protocolo proporciona dos modos de evaluación arquitectónica multidimensional para resolver dilemas técnicos complejos sin caer en el sesgo de confirmación ni en la complacencia (*sycophancy*) de un único hilo de pensamiento:
 
-A diferencia de un consejo multi-modelo tradicional (que requiere múltiples API keys y suele converger en respuestas genéricas promedio), este enfoque fuerza polarizaciones dialécticas deliberadas: datos objetivos (Blanco), intuición y experiencia de usuario (Rojo), riesgos y fallos críticos (Negro), optimismo y valor (Amarillo), creatividad disruptiva (Verde) y facilitación/síntesis ejecutiva (Azul).
-
----
-
-## Cuándo Activar esta Skill
-
-Activa este protocolo cuando el usuario use frases como:
-- *"Consulta con el consejo: [pregunta o decisión técnica]"*
-- *"Aplica los 6 sombreros para evaluar si deberíamos..."*
-- *"Haz una sesión de los sombreros de Bono antes de planificar..."*
-- *"Analiza esta arquitectura desde todos los ángulos"*
-- *"¿Qué opina el consejo de sombreros sobre este enfoque?"*
+1. **🔮 Modo 1: Protocolo de Consenso Democrático MAGI (Subagentes Concurrentes - Estilo Evangelion)**:
+   Inspirado en el supercomputador tripartito de la Dra. Naoko Akagi en *Neon Genesis Evangelion*. Invoca a **tres subagentes concurrentes e independientes** (`MELCHIOR-1`, `BALTHASAR-2`, `CASPER-3`) mediante `invoke_subagent` para que deliberen en paralelo sin contaminarse y emitan votos soberanos (`AGREED`, `DENIED`, `CONDITIONAL`).
+2. **🎩 Modo 2: Deliberación Secuencial de los 6 Sombreros de Edward de Bono**:
+   Para reflexiones rápidas dentro del mismo hilo conversacional, forzando al modelo a adoptar posturas dialectales ortogonales (Blanco, Rojo, Negro, Amarillo, Verde, Azul).
 
 ---
 
-## Protocolo de Deliberación (Paso a Paso)
+## 🔮 MODO 1: PROTOCOLO DE CONSENSO DEMOCRÁTICO MAGI (Subagentes)
 
-Cuando se active la deliberación, el agente debe proceder en las siguientes fases ordenadas:
+### Cuándo Activar el Protocolo MAGI
+Activa este modo preferente ante decisiones de alto impacto o cuando el usuario utilice expresiones como:
+- *"Inicia el protocolo MAGI para decidir si..."*
+- *"Consulta a MAGI: Melchior, Balthasar y Casper sobre este cambio"*
+- *"Haz una votación de subagentes estilo Evangelion"*
+- *"Somete esta arquitectura al consejo tripartito de MAGI"*
+- Ante cualquier decisión técnica **difícil de revertir** (criterio de ADR de `Architect-Guardian`).
 
-```mermaid
-graph TD
-    A["🔵 Sombrero Azul: Encuadre del Problema"] --> B["⚪ Sombrero Blanco: Hechos y Restricciones"]
-    B --> C["🔴 Sombrero Rojo: Intuición y UX"]
-    B --> D["🟢 Sombrero Verde: Ideas Creativas"]
-    C --> E["⚫ Sombrero Negro: Riesgos y Cautela"]
-    D --> F["🟡 Sombrero Amarillo: Oportunidades y Valor"]
-    E --> G["🔵 Sombrero Azul: Síntesis y Plan Definitivo"]
-    F --> G
+### La Tríada MAGI y Mapeo con los 6 Sombreros
+
+| Nodo MAGI | Arquetipo de Naoko Akagi | Sombreros de Bono Integrados | Enfoque y Criterio de Voto |
+| :--- | :--- | :--- | :--- |
+| **🧠 MELCHIOR-1** | La Científica | ⚪ **Blanco** (Datos/Métricas) + 🔵 **Azul** (Estructura/Deep Modules) | **Lógica Pura y Coherencia:** Evalúa modularidad profunda, complejidad $O(n)$, interfaces limpias y principios DDD. Vota `DENIED` ante pasamanos superficiales o acoplamiento desordenado. |
+| **🛡️ BALTHASAR-2** | La Madre / El Guardián | ⚫ **Negro** (Abogado del Diablo/Riesgos) + 🔴 **Rojo** (Instinto/Seguridad) | **Preservación y Aversión al Riesgo:** Evalúa el peor escenario (*worst-case*), radio de explosión (*blast radius*), reversibilidad/rollback y necesidad de tests deterministas. Vota `DENIED` si hay riesgo de fallo catastrófico en producción. |
+| **⚡ CASPER-3** | La Mujer / La Disruptora | 🟢 **Verde** (Creatividad/Disrupción) + 🟡 **Amarillo** (Valor/UX/ROI) | **Pragmatismo, UX y Velocidad:** Evalúa la regla 80/20, deleite del usuario final, valor de negocio y atajos laterales que eliminen código. Vota `DENIED` ante sobre-ingeniería masturbatoria que demore la entrega sin aportar valor. |
+
+### Cómo Invocar los Subagentes MAGI
+El agente orquestador debe invocar a los tres subagentes en una **única llamada concurrente** utilizando la herramienta `invoke_subagent`:
+
+```json
+{
+  "Subagents": [
+    {
+      "TypeName": "self",
+      "Role": "MAGI-1 MELCHIOR (Scientist)",
+      "Prompt": "Eres MELCHIOR-1 (La Científica). Evalúa el siguiente dilema con Sombrero Blanco y Azul (datos, modularidad profunda, complejidad O(n), DDD): [DESCRIPCIÓN]. Concluye con VOTO: [AGREED | DENIED | CONDITIONAL], MOTIVO y ESTIPULACIONES."
+    },
+    {
+      "TypeName": "self",
+      "Role": "MAGI-2 BALTHASAR (Mother/Guardian)",
+      "Prompt": "Eres BALTHASAR-2 (La Madre/Guardián). Evalúa el siguiente dilema con Sombrero Negro y Rojo (peor escenario, blast radius, rollback, seguridad, tests): [DESCRIPCIÓN]. Concluye con VOTO: [AGREED | DENIED | CONDITIONAL], MOTIVO y ESTIPULACIONES."
+    },
+    {
+      "TypeName": "self",
+      "Role": "MAGI-3 CASPER (Woman/Disruptor)",
+      "Prompt": "Eres CASPER-3 (La Mujer/Disruptora). Evalúa el siguiente dilema con Sombrero Verde y Amarillo (pragmatismo 80/20, UX, valor de negocio, pensamiento lateral): [DESCRIPCIÓN]. Concluye con VOTO: [AGREED | DENIED | CONDITIONAL], MOTIVO y ESTIPULACIONES."
+    }
+  ]
+}
 ```
 
-### Fase 1: Encuadre y Hechos Objetivos
-1. 🔵 **Sombrero Azul (Apertura)**:
-   - Define con precisión el dilema técnico, la decisión o la funcionalidad a construir.
-   - Establece los criterios de éxito y las restricciones no negociables.
-2. ⚪ **Sombrero Blanco (Datos Puros)**:
-   - Enumera exclusivamente información factual: versiones del stack, dependencias instaladas, volumen de datos estimado, restricciones de hardware/red, y **qué información crítica falta**.
-   - *Regla*: Prohibido dar opiniones, sesgos o juicios de valor.
+### Reglas de Decisión del Orquestador
+Al recibir las 3 respuestas independientes:
+- **3 - 0 UNANIMOUS CONSENSUS**: Aprobación inmediata.
+- **2 - 1 MAJORITY APPROVAL**: Se aprueba por mayoría, pero **las estipulaciones del nodo disidente son mandatos obligatorios** que se integran en el plan.
+- **0 - 3 o 1 - 2 REJECTED**: Veto del sistema. Se debe reformular la propuesta.
+- Si la decisión es de alto impacto, documentar el veredicto en `docs/adr/00X-[decision].md`.
 
-### Fase 2: Pensamiento Divergente y Percepción
-3. 🔴 **Sombrero Rojo (Intuición, Sentimientos y UX)**:
-   - Expresa las sensaciones viscerales del desarrollador y del usuario final: ¿Qué partes del diseño se sienten frágiles, confusas, sobrecargadas o agradables?
-   - *Regla*: Las opiniones no requieren justificación lógica ni demostración técnica formal.
-4. 🟢 **Sombrero Verde (Creatividad y Pensamiento Lateral)**:
-   - Propone alternativas fuera de la caja: ¿Qué pasaría si no usamos base de datos relacional? ¿Y si invertimos el flujo? ¿Hay un atajo innovador o patrón poco común que simplifique el 80% del esfuerzo?
-   - *Regla*: Sin autocensura. La viabilidad se evaluará más adelante.
-
-### Fase 3: Tensión Dialéctica (Crítica vs. Valor)
-5. ⚫ **Sombrero Negro (Abogado del Diablo & Riesgos)**:
-   - Identifica con crudeza los puntos de fallo: vulnerabilidades de seguridad, condiciones de carrera, deuda técnica oculta, pesadilla de mantenimiento a 2 años, costes ocultos.
-   - *Pregunta clave*: ¿Por qué este proyecto o arquitectura podría fracasar estrepitosamente?
-6. 🟡 **Sombrero Amarillo (Optimismo & Beneficios)**:
-   - Defiende el mejor escenario posible fundamentado: ahorro de tiempo de desarrollo, escalabilidad futura, mejora en la satisfacción del equipo y ROI.
-   - *Pregunta clave*: ¿Por qué vale totalmente la pena hacer esto y cómo maximizamos sus virtudes?
-
-### Fase 4: Síntesis Ejecutiva y Plan Maestro
-7. 🔵 **Sombrero Azul (Cierre y Plan de Acción)**:
-   - Resuelve los conflictos directos (p. ej., cómo las ideas del Sombrero Verde resuelven los riesgos advertidos por el Sombrero Negro).
-   - Genera una **Matriz de Deliberación** resumida.
-   - Elabora el **Plan de Implementación Definitivo** estructurado por fases, con mitigaciones explícitas para cada riesgo del Sombrero Negro.
-
----
-
-## Formato de Salida Esperado
-
-La respuesta al usuario debe estructurarse con la siguiente plantilla:
+### Formato de Salida Visual MAGI (Estilo NERV)
 
 ```markdown
-# 🎩 Consejo de los 6 Sombreros: [Título del Problema]
+# 🔮 SISTEMA MAGI: DELIBERACIÓN TÁCTICA TRIPARTITA
 
-## 1. Deliberación de las Voces
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║                       MAGI SUPERCOMPUTER SYSTEM                      ║
+║                     NERV TOKYO-3 ARCHITECTURE GRID                   ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
 
-### 🔵 Azul (Encuadre)
-[Objetivo central y preguntas a responder]
+### 1. Votación de los Nodos Soberanos
 
-### ⚪ Blanco (Hechos y Datos)
-- **Hechos verificados**: ...
-- **Incógnitas / Datos faltantes**: ...
+| Nodo MAGI | Arquetipo / Sombreros | Voto Oficial | Dictamen Técnico Principal |
+| :--- | :--- | :---: | :--- |
+| **MELCHIOR-1** | 🧠 Científica (⚪ Blanco + 🔵 Azul) | **AGREED** | "Estructura modular profunda con interfaz simple y cohesión alta." |
+| **BALTHASAR-2** | 🛡️ Madre (⚫ Negro + 🔴 Rojo) | **CONDITIONAL** | "Aprobado solo con patrón expand-contract y tests de regresión previos." |
+| **CASPER-3** | ⚡ Mujer (🟢 Verde + 🟡 Amarillo) | **AGREED** | "Acelera la entrega y reduce la fricción de usuario en 40%." |
 
-### 🔴 Rojo (Intuición y UX)
-- **Gut feeling técnico**: ...
-- **Fricción percibida**: ...
+### 2. Veredicto del Consenso
+**`>>> VEREDICTO FINAL: 3-0 CONSENSO CON CONDICIONES (MAJORITY PASS)`**
 
-### 🟢 Verde (Alternativas Creativas)
-- **Propuesta disruptiva A**: ...
-- **Enfoque lateral B**: ...
+### 3. Tesis Individuales de los Nodos
+- **Melchior-1 (Análisis Formal)**: ...
+- **Balthasar-2 (Matriz de Riesgo y Blast Radius)**: ...
+- **Casper-3 (Valor de Usuario y Atajos Laterales)**: ...
 
-### ⚫ Negro (Riesgos y Fallos Críticos)
-- ⚠️ **Riesgo 1**: ...
-- ⚠️ **Riesgo 2**: ...
+### 4. Salvaguardas Obligatorias (Mandato de Balthasar / Disidentes)
+1. ...
 
-### 🟡 Amarillo (Valor y Oportunidades)
-- ✨ **Beneficio principal**: ...
-- ✨ **Ventaja competitiva**: ...
-
----
-
-## 2. Matriz de Síntesis y Tensiones Resueltas
-
-| Tensión / Conflicto | Voz Crítica (Negro) | Respuesta / Mitigación (Verde / Amarillo) | Veredicto Azul |
-| :--- | :--- | :--- | :--- |
-| Ejemplo: Rendimiento vs Simplicidad | Cachear en memoria saturará RAM | Usar LRU acotado o Redis ligero | Adoptar LRU acotado en Fase 1 |
-
----
-
-## 3. Plan de Implementación Definitivo (Sombrero Azul)
-
-1. **Fase 1: Preparación y Validación de Datos (Blanco)**
-2. **Fase 2: Arquitectura Core con Mitigación de Riesgos (Negro + Verde)**
-3. **Fase 3: Refinamiento de Experiencia y Valor (Rojo + Amarillo)**
+### 5. Plan de Acción Aprobado por MAGI
+1. ...
 ```
 
 ---
 
-## Recursos y Referencias Adicionales
+## 🎩 MODO 2: CONSEJO CLÁSICO DE BONO (Un solo hilo)
 
-- Consulta la guía profunda de cada sombrero y sus límites en [hats_framework.md](./references/hats_framework.md).
-- Si deseas plantillas de prompts aislados o subagentes, revisa [prompt_templates.md](./references/prompt_templates.md).
-- Para ejecutar la deliberación mediante un script Python automatizado en CLI, utiliza [six_hats.py](./scripts/six_hats.py).
+Para consultas breves de exploración rápida, ejecuta el flujo secuencial clásico:
+1. 🔵 **Sombrero Azul**: Encuadre del problema y criterios de éxito.
+2. ⚪ **Sombrero Blanco**: Datos duros y métricas sin opiniones.
+3. 🔴 **Sombrero Rojo**: Gut feeling técnico e instinto de UX.
+4. 🟢 **Sombrero Verde**: Creatividad y pensamiento lateral.
+5. ⚫ **Sombrero Negro**: Riesgos, puntos de fallo y auditoría implacable.
+6. 🟡 **Sombrero Amarillo**: Optimismo lógico, beneficios y ROI.
+7. 🔵 **Sombrero Azul**: Síntesis ejecutiva y Plan Maestro.
+
+---
+
+## Referencias
+- Protocolo y teoría detallada de MAGI: [magi_protocol.md](./references/magi_protocol.md).
+- Límites cognitivos de los 6 Sombreros: [hats_framework.md](./references/hats_framework.md).
+- Prompts para subagentes y CLI: [prompt_templates.md](./references/prompt_templates.md).
+- CLI ejecutable local: [six_hats.py](./scripts/six_hats.py).
