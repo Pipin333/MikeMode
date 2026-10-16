@@ -266,6 +266,11 @@ def check_docs(target_dir: Path) -> int:
     detected_env_vars: set[str] = set()
     touched_submodules: set[str] = set()
 
+    all_top_submodules = {
+        d.name for d in target_dir.iterdir()
+        if d.is_dir() and is_top_level_submodule(target_dir, d.name)
+    }
+
     for file_path in changed_files:
         name_lower = file_path.name.lower()
         ext_lower = file_path.suffix.lower()
@@ -275,7 +280,7 @@ def check_docs(target_dir: Path) -> int:
         except ValueError:
             rel_parts = (file_path.name,)
 
-        if len(rel_parts) > 1 and is_top_level_submodule(target_dir, rel_parts[0]):
+        if len(rel_parts) > 1 and rel_parts[0] in all_top_submodules:
             touched_submodules.add(rel_parts[0])
 
         is_root_doc = (
@@ -320,10 +325,6 @@ def check_docs(target_dir: Path) -> int:
             except Exception:
                 pass
 
-    all_top_submodules = {
-        d.name for d in target_dir.iterdir()
-        if d.is_dir() and is_top_level_submodule(target_dir, d.name)
-    }
     readme_indexes_submodules = bool(readme_text) and any(
         mod in readme_text for mod in all_top_submodules
     )

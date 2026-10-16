@@ -528,9 +528,16 @@ def run_pickup(target_path: Path) -> int:
     content = handover_path.read_text(encoding="utf-8", errors="replace")
     telemetry = _get_git_telemetry(target_path)
 
+    head_match = re.search(r"- \*\*Git HEAD\*\*:\s*`([^`]+)`", content)
+    saved_head = head_match.group(1) if head_match else None
+
     print("=" * 70)
     print("🚀 [Session Pickup] Retomando contexto desde .scratch/HANDOVER.md")
     print(f"Rama actual: {telemetry['branch']} | HEAD actual: {telemetry['head_sha']}")
+    if saved_head and telemetry["head_sha"] != "unknown" and saved_head != telemetry["head_sha"]:
+        print(
+            f"⚠️ [DIVERGENCIA DE HEAD DETECTADA] El snapshot se guardó en '{saved_head}', pero el HEAD actual es '{telemetry['head_sha']}'."
+        )
     print("=" * 70)
     print(content)
     return 0
@@ -546,7 +553,7 @@ def run_babysit_check(target_path: Path) -> int:
         0 si la rama no presenta conflictos de merge sin resolver, 1 si existen conflictos bloqueantes.
     """
     target_path = target_path.resolve()
-    conflict_pattern = re.compile(r"^(?:<<<<<<< |=======$|>>>>>>> )")
+    conflict_pattern = re.compile(r"^(?:<<<<<<< |>>>>>>> )")
     conflicted_files: List[Tuple[Path, int]] = []
 
     for root, dirs, files in os.walk(target_path):

@@ -105,6 +105,33 @@ class TestArchitectGuardWorkflows(unittest.TestCase):
         exit_code = architect_guard.run_consolidated_report(self.repo_path)
         self.assertEqual(exit_code, 0)
 
+    def test_babysit_ignores_markdown_setext_equals_heading(self) -> None:
+        """Verifica que encabezados Setext Markdown (=======) no disparen falsos positivos en babysit."""
+        doc_file = self.repo_path / "NOTES.md"
+        doc_file.write_text("Titulo Principal\n=======\nContenido normal.\n", encoding="utf-8")
+        exit_code = architect_guard.run_babysit_check(self.repo_path)
+        self.assertEqual(
+            exit_code,
+            0,
+            "Un subrayado Markdown '=======' sin delimitadores <<<<<<< / >>>>>>> no debe marcarse como conflicto.",
+        )
+
+    def test_pickup_warns_when_head_diverged_from_handover(self) -> None:
+        """Verifica que run_pickup detecte cuando el HEAD actual avanzó respecto al snapshot guardado."""
+        import io
+        from contextlib import redirect_stdout
+
+        architect_guard.generate_handover(self.repo_path, summary="Snapshot inicial")
+        (self.repo_path / "extra.txt").write_text("nuevo commit\n", encoding="utf-8")
+        subprocess.run(["git", "add", "extra.txt"], cwd=self.repo_path, capture_output=True, check=True)
+        subprocess.run(["git", "commit", "-m", "advance head"], cwd=self.repo_path, capture_output=True, check=True)
+
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            exit_code = architect_guard.run_pickup(self.repo_path)
+        self.assertEqual(exit_code, 0)
+        self.assertIn("DIVERGENCIA DE HEAD DETECTADA", buf.getvalue())
+
 
 if __name__ == "__main__":
     unittest.main()
