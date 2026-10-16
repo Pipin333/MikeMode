@@ -23,3 +23,11 @@ graphify-out/
 graph.html
 graph.json
 GRAPH_REPORT.md
+
+# Official Antigravity marketplace plugins (managed by Antigravity UI)
+science/
+chrome-devtools-plugin/
+firebase/
+google-antigravity-sdk/
+modern-web-guidance-plugin/
+

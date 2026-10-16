@@ -59,7 +59,7 @@ Antes de finalizar cualquier tarea que involucre edición de código, el agente 
 | **Variables de Entorno** | Usos de `process.env.*`, `os.getenv()`, `env::var()`, `System.getenv()` | Actualizar tabla de **Variables de Entorno** en `README.md` y sincronizar `.env.example`. |
 | **Nuevos Scripts / Comandos** | `package.json` (`"scripts"`), `Makefile`, `taskfile.yml`, CLI entrypoints | Actualizar sección **Scripts Disponibles / Uso**. |
 | **Rutas y Endpoints de API** | Archivos de routers (`express`, `fastapi`, `spring`, etc.) | Actualizar sección **Endpoints / API Reference** con método, ruta, parámetros y respuesta esperada. |
-| **Cambios Arquitectónicos** | Nuevas carpetas, refactorizaciones de módulos, servicios nuevos | Actualizar diagrama o árbol de **Estructura del Proyecto**. |
+| **Cambios Arquitectónicos / Monorepos** | Nuevas carpetas de primer nivel, `plugin.json`, `SKILL.md`, submódulos | Actualizar tanto el `README.md` del submódulo como el índice del **`README.md` raíz del repositorio**. |
 | **Modo de Ejecución o Despliegue** | `Dockerfile`, `docker-compose.yml`, scripts de despliegue | Actualizar sección **Despliegue / Docker / Ejecución**. |
 
 ---
@@ -90,15 +90,17 @@ Examina las modificaciones realizadas en la sesión:
   - ¿Cumple rustdoc o godoc si es Rust o Go?
 - Si alguna función pública carece de docstrings o documentación de parámetros, añádela antes de proceder.
 
-### Paso 3: Evaluación y Creación de Documentación
+### Paso 3: Evaluación y Creación de Documentación (Módulo y Raíz)
 - ¿Existe ya un `README.md` en la raíz del proyecto?
   - **NO**: Créalo inmediatamente a partir de la [Plantilla Estándar](./references/readme_template.md).
-  - **SÍ**: Lee el contenido actual del `README.md` para identificar qué secciones requieren actualización y cuáles deben preservarse intactas.
+  - **SÍ**: Lee el contenido actual del `README.md` raíz para identificar qué secciones requieren actualización y cuáles deben preservarse intactas.
+- **Regla Anti-Punto-Ciego en Monorepos**: Si creaste o modificaste un paquete/plugin de primer nivel con su propio `<modulo>/README.md`, es **obligatorio** verificar y actualizar también el `README.md` de la raíz del repositorio.
 
 ### Paso 4: Edición Quirúrgica y No Destructiva
 - **Nunca sobreescribas a ciegas** el `README.md` existente con un resumen genérico.
 - Respeta la voz, badges, notas personalizadas y estilo previo del autor.
 - Inserta o modifica únicamente los bloques pertinentes:
+  - Añade el nuevo plugin o paquete a la tabla de índice del `README.md` raíz.
   - Añade la nueva variable a la tabla de `.env`.
   - Añade el nuevo comando a la lista de scripts.
   - Documenta la nueva opción de configuración o endpoint.

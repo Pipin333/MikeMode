@@ -12,10 +12,11 @@ Diseñado tanto para agentes de **Antigravity** como para cualquier otro modelo 
 - **`rules/AGENTS.md`**: Regla activa global que se fusiona con las directivas de todos los agentes de Antigravity, obligándolos a cumplir con PEP 8/257 (o equivalentes) y a no olvidar la documentación cada vez que toquen código.
 - **`skills/doc-guardian/`**:
   - `SKILL.md`: Protocolo paso a paso para el agente (estándares PEP 8 y PEP 257, detección de impacto, auditoría de dependencias, variables de entorno y edición quirúrgica de documentación).
-  - `scripts/doc_guard.py`: Script CLI multiplataforma en Python para auditar proyectos y detectar código modificado sin documentar o sin reglas.
+  - `scripts/doc_guard.py`: Script CLI multiplataforma en Python para auditar proyectos, validar índices de monorepos/plugins en el `README.md` raíz y detectar código modificado sin documentar.
   - `scripts/generate_perfect_pdf.py`: Motor editorial para compilar cualquier archivo Markdown en PDFs ejecutivos de alta definición con paginación estricta y Playwright.
   - `references/universal_agent_rules.md`: Guía y fragmentos listos para usar en `AGENTS.md`, `CLAUDE.md`, `.cursorrules` y `.github/copilot-instructions.md`.
   - `references/readme_template.md`: Plantilla estándar y modular para nuevos READMEs.
+- **`tests/test_doc_guard.py`**: Suite de pruebas unitarias y de regresión para validar detección en monorepos y submódulos.
 
 ---
 
@@ -44,6 +45,9 @@ python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/skills/doc-guardian/s
 
 # Exportar cualquier Markdown a PDF editorial de alta definición:
 python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/skills/doc-guardian/scripts/doc_guard.py pdf <archivo.md> [-o resultado.pdf]
+
+# Ejecutar la suite de pruebas de regresión:
+python C:/Users/Petiso/.gemini/config/plugins/doc-guardian/tests/test_doc_guard.py
 ```
 
 ---

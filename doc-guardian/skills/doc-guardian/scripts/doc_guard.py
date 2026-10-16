@@ -42,6 +42,7 @@ MANIFEST_FILES = {
     'Gemfile': 'Ruby Bundler',
     'pom.xml': 'Java Maven',
     'build.gradle': 'Gradle',
+    'plugin.json': 'Antigravity Plugin Manifest',
 }
 
 DOC_EXTENSIONS = {'.md', '.rst', '.adoc', '.txt'}
@@ -53,68 +54,117 @@ CODE_EXTENSIONS = {
     '.ps1', '.html', '.css', '.scss', '.vue', '.svelte'
 }
 
+NON_MODULE_TOP_DIRS = {
+    '.git', '.github', '.vscode', '.devcontainer', '.agents', '.gemini',
+    'docs', 'tests', 'test', 'scripts', 'src', 'lib', 'bin',
+    'node_modules', 'venv', '.venv', '__pycache__', 'dist', 'build',
+}
+
+SUBMODULE_MARKERS = {'plugin.json', 'README.md', 'package.json', 'pyproject.toml', 'Cargo.toml', 'go.mod'}
+
 
 def is_git_repo(path: Path) -> bool:
+    """Verifica si la ruta dada se encuentra dentro de un árbol de trabajo Git.
+
+    Args:
+        path: Ruta del directorio a consultar.
+
+    Returns:
+        True si pertenece a un repositorio Git, False en caso contrario.
+    """
     try:
         res = subprocess.run(
             ['git', 'rev-parse', '--is-inside-work-tree'],
             cwd=path,
             capture_output=True,
-            text=True
+            text=True,
+            encoding='utf-8',
+            errors='replace',
         )
         return res.returncode == 0
     except Exception:
         return False
 
 
-def get_git_changes(path: Path):
-    """Obtiene los archivos modificados según git status y git diff."""
-    modified_files = set()
-    staged_files = set()
-    untracked_files = set()
+def get_git_changes(path: Path) -> set[Path]:
+    """Obtiene los archivos modificados o sin seguimiento (expandiendo subdirectorios) vía git status.
+
+    Args:
+        path: Ruta del directorio o repositorio Git a auditar.
+
+    Returns:
+        Conjunto de rutas absolutas de archivos modificados, en stage o untracked dentro de `path`.
+    """
+    modified_files: set[Path] = set()
+    staged_files: set[Path] = set()
+    untracked_files: set[Path] = set()
+    resolved_target = path.resolve()
 
     try:
-        status_res = subprocess.run(
-            ['git', 'status', '--porcelain'],
-            cwd=path,
+        toplevel_res = subprocess.run(
+            ['git', 'rev-parse', '--show-toplevel'],
+            cwd=resolved_target,
             capture_output=True,
             text=True,
-            check=True
+            encoding='utf-8',
+            errors='replace',
+            check=True,
+        )
+        git_root = Path(toplevel_res.stdout.strip()).resolve()
+
+        status_res = subprocess.run(
+            ['git', 'status', '--porcelain', '-uall'],
+            cwd=resolved_target,
+            capture_output=True,
+            text=True,
+            encoding='utf-8',
+            errors='replace',
+            check=True,
         )
         for line in status_res.stdout.splitlines():
             if not line:
                 continue
             status_code = line[:2]
-            filename = line[3:].strip()
-            # Handle rename syntax 'old -> new'
+            filename = line[3:].strip().strip('"')
             if ' -> ' in filename:
-                filename = filename.split(' -> ')[1]
-            
-            p = path / filename
+                filename = filename.split(' -> ')[1].strip().strip('"')
+
+            p = (git_root / filename).resolve()
+            if not p.is_relative_to(resolved_target):
+                continue
+
             if '?' in status_code:
                 untracked_files.add(p)
-            elif status_code[0] in 'MADRC':
+            elif status_code[0] in 'MARC':
                 staged_files.add(p)
-            if status_code[1] in 'MADRC':
+            if status_code[1] in 'MARC':
                 modified_files.add(p)
-    except Exception as e:
+    except Exception:
         pass
 
-    all_changed = modified_files.union(staged_files).union(untracked_files)
-    return all_changed
+    return modified_files.union(staged_files).union(untracked_files)
 
 
-def scan_recent_files(path: Path, max_hours: float = 2.0):
-    """Escaneo alternativo para directorios que no usan git."""
-    changed = set()
-    now = Path(__file__).stat().st_mtime if Path(__file__).exists() else 0
+def scan_recent_files(path: Path, max_hours: float = 2.0) -> set[Path]:
+    """Escanea archivos modificados recientemente en directorios que no usan Git.
+
+    Args:
+        path: Directorio raíz a escanear.
+        max_hours: Ventana de antigüedad máxima en horas.
+
+    Returns:
+        Conjunto de archivos modificados dentro de la ventana temporal.
+    """
+    changed: set[Path] = set()
     import time
     current_time = time.time()
     threshold = current_time - (max_hours * 3600)
 
     for root, dirs, files in os.walk(path):
-        # Ignorar carpetas comunes pesadas
-        dirs[:] = [d for d in dirs if d not in {'.git', 'node_modules', '__pycache__', '.venv', 'venv', 'dist', 'build', '.agents'}]
+        dirs[:] = [
+            d for d in dirs
+            if d not in {'.git', 'node_modules', '__pycache__', '.venv', 'venv', 'dist', 'build', '.agents'}
+        ]
         for f in files:
             full = Path(root) / f
             try:
@@ -125,14 +175,21 @@ def scan_recent_files(path: Path, max_hours: float = 2.0):
     return changed
 
 
-def extract_env_vars_from_file(file_path: Path):
-    found = set()
+def extract_env_vars_from_file(file_path: Path) -> set[str]:
+    """Extrae nombres de variables de entorno referenciadas dentro de un archivo de código.
+
+    Args:
+        file_path: Ruta al archivo de código fuente.
+
+    Returns:
+        Conjunto de nombres de variables de entorno encontradas.
+    """
+    found: set[str] = set()
     try:
         content = file_path.read_text(encoding='utf-8', errors='ignore')
         for pattern in ENV_VAR_PATTERNS:
             for match in pattern.finditer(content):
                 var_name = match.group(1)
-                # Filter out standard generic names like NODE_ENV if desired, or keep all
                 if len(var_name) > 2:
                     found.add(var_name)
     except Exception:
@@ -140,7 +197,43 @@ def extract_env_vars_from_file(file_path: Path):
     return found
 
 
-def check_docs(target_dir: Path):
+def is_top_level_submodule(target_dir: Path, top_dir_name: str) -> bool:
+    """Determina si un subdirectorio de primer nivel constituye un módulo o plugin independiente rastreado.
+
+    Args:
+        target_dir: Directorio raíz del repositorio.
+        top_dir_name: Nombre de la carpeta de primer nivel.
+
+    Returns:
+        True si el subdirectorio contiene marcadores de paquete/plugin y no está en .gitignore, False en caso contrario.
+    """
+    if top_dir_name in NON_MODULE_TOP_DIRS or top_dir_name.startswith('.'):
+        return False
+    sub_path = target_dir / top_dir_name
+    if not sub_path.is_dir():
+        return False
+    try:
+        ignore_res = subprocess.run(
+            ['git', 'check-ignore', '-q', str(sub_path)],
+            cwd=target_dir,
+            capture_output=True,
+        )
+        if ignore_res.returncode == 0:
+            return False
+    except Exception:
+        pass
+    return any((sub_path / marker).exists() for marker in SUBMODULE_MARKERS)
+
+
+def check_docs(target_dir: Path) -> int:
+    """Audita el directorio objetivo verificando sincronización entre código, submódulos y README raíz.
+
+    Args:
+        target_dir: Ruta del proyecto o monorepo a auditar.
+
+    Returns:
+        Código de salida (0 si la documentación está sincronizada, 1 si existen alertas críticas).
+    """
     target_dir = target_dir.resolve()
     print(f"\n🔍 [Doc-Guardian] Auditando proyecto en: {target_dir}")
 
@@ -159,38 +252,62 @@ def check_docs(target_dir: Path):
     ]
     has_readme = len(readme_files) > 0
     main_readme = readme_files[0] if has_readme else None
+    readme_text = ""
+    if main_readme and main_readme.exists():
+        try:
+            readme_text = main_readme.read_text(encoding='utf-8', errors='ignore')
+        except Exception:
+            readme_text = ""
 
-    # Separar tipos de archivos modificados
-    code_changes = []
-    doc_changes = []
-    manifest_changes = []
-    detected_env_vars = set()
+    code_changes: list[Path] = []
+    root_doc_changes: list[Path] = []
+    sub_doc_changes: list[Path] = []
+    manifest_changes: list[tuple[Path, str]] = []
+    detected_env_vars: set[str] = set()
+    touched_submodules: set[str] = set()
 
     for file_path in changed_files:
         name_lower = file_path.name.lower()
         ext_lower = file_path.suffix.lower()
 
-        if name_lower in DOC_FILENAMES or (file_path.parent.name.lower() == 'docs' and ext_lower in DOC_EXTENSIONS):
-            doc_changes.append(file_path)
+        try:
+            rel_parts = file_path.resolve().relative_to(target_dir).parts
+        except ValueError:
+            rel_parts = (file_path.name,)
+
+        if len(rel_parts) > 1 and is_top_level_submodule(target_dir, rel_parts[0]):
+            touched_submodules.add(rel_parts[0])
+
+        is_root_doc = (
+            (len(rel_parts) == 1 and name_lower in DOC_FILENAMES)
+            or (len(rel_parts) >= 2 and rel_parts[0].lower() == 'docs' and ext_lower in DOC_EXTENSIONS)
+        )
+
+        if is_root_doc:
+            root_doc_changes.append(file_path)
+        elif name_lower in DOC_FILENAMES or (file_path.parent.name.lower() == 'docs' and ext_lower in DOC_EXTENSIONS):
+            sub_doc_changes.append(file_path)
         elif name_lower in MANIFEST_FILES:
             manifest_changes.append((file_path, MANIFEST_FILES[name_lower]))
-        elif ext_lower in CODE_EXTENSIONS:
+        elif ext_lower in CODE_EXTENSIONS or name_lower == 'skill.md':
             code_changes.append(file_path)
-            vars_in_file = extract_env_vars_from_file(file_path)
-            detected_env_vars.update(vars_in_file)
+            if ext_lower in CODE_EXTENSIONS:
+                vars_in_file = extract_env_vars_from_file(file_path)
+                detected_env_vars.update(vars_in_file)
 
-    # Revisar si las variables detectadas están documentadas en README o archivos .env.*.example
-    env_examples = list(target_dir.glob(".env*.example")) + list(target_dir.glob(".env*.sample")) + list(target_dir.glob(".env*.template"))
-    documented_vars = set()
-    
-    if main_readme and main_readme.exists():
-        try:
-            readme_text = main_readme.read_text(encoding='utf-8', errors='ignore')
-            for var in detected_env_vars:
-                if var in readme_text:
-                    documented_vars.add(var)
-        except Exception:
-            pass
+    all_doc_changes = root_doc_changes + sub_doc_changes
+
+    env_examples = (
+        list(target_dir.glob(".env*.example"))
+        + list(target_dir.glob(".env*.sample"))
+        + list(target_dir.glob(".env*.template"))
+    )
+    documented_vars: set[str] = set()
+
+    if readme_text:
+        for var in detected_env_vars:
+            if var in readme_text:
+                documented_vars.add(var)
 
     for example_file in env_examples:
         if example_file.exists():
@@ -203,29 +320,58 @@ def check_docs(target_dir: Path):
             except Exception:
                 pass
 
-    undocumented_vars = detected_env_vars - documented_vars
+    all_top_submodules = {
+        d.name for d in target_dir.iterdir()
+        if d.is_dir() and is_top_level_submodule(target_dir, d.name)
+    }
+    readme_indexes_submodules = bool(readme_text) and any(
+        mod in readme_text for mod in all_top_submodules
+    )
+    candidate_submodules = (
+        all_top_submodules | touched_submodules
+        if readme_indexes_submodules
+        else touched_submodules
+    )
 
-    # Diagnóstico y Evaluación
-    alerts = []
-    warnings = []
-    ok_items = []
+    undocumented_vars = detected_env_vars - documented_vars
+    undocumented_submodules = sorted(
+        mod for mod in candidate_submodules if mod not in readme_text
+    )
+
+    alerts: list[str] = []
+    warnings: list[str] = []
+    ok_items: list[str] = []
 
     if not has_readme:
         alerts.append("❌ NO SE ENCONTRÓ `README.md` en la raíz del proyecto. Debe crearse de inmediato.")
     else:
         ok_items.append(f"✅ README principal detectado: {main_readme.name}")
 
-    if code_changes and not doc_changes:
+    if code_changes and not all_doc_changes:
         alerts.append(
-            f"⚠️ Se modificaron {len(code_changes)} archivo(s) de código, pero NO se ha modificado ningún archivo de documentación (README.md)."
+            f"⚠️ Se modificaron {len(code_changes)} archivo(s) de código/skills, pero NO se ha modificado ningún archivo de documentación (README.md)."
         )
-    elif doc_changes:
-        ok_items.append(f"✅ Documentación modificada en este turno: {[f.name for f in doc_changes]}")
+    elif all_doc_changes:
+        rel_docs = []
+        for f in all_doc_changes:
+            try:
+                rel_docs.append(f.resolve().relative_to(target_dir).as_posix())
+            except ValueError:
+                rel_docs.append(f.name)
+        ok_items.append(f"✅ Documentación modificada en este turno: {sorted(rel_docs)}")
+
+    if undocumented_submodules and main_readme:
+        mods_str = ", ".join(f"'{m}'" for m in undocumented_submodules)
+        alerts.append(
+            f"⚠️ Se crearon o modificaron módulos/plugins de primer nivel ({mods_str}) que NO están documentados en el `{main_readme.name}` raíz del repositorio."
+        )
 
     if manifest_changes:
-        manifest_names = ", ".join([f"{f.name} ({m})" for f, m in manifest_changes])
+        manifest_names = ", ".join(
+            f"{f.resolve().relative_to(target_dir).as_posix()} ({m})" for f, m in manifest_changes
+        )
         warnings.append(
-            f"📦 Se modificaron manifiestos de dependencias: {manifest_names}. Asegúrate de que las instrucciones de instalación en el README sigan vigentes."
+            f"📦 Se modificaron manifiestos: {manifest_names}. Asegúrate de que el README raíz y del módulo sigan vigentes."
         )
 
     if undocumented_vars:
@@ -234,10 +380,9 @@ def check_docs(target_dir: Path):
             f"🔑 Se detectaron variables de entorno en código que NO están en README ni en .env.example: {vars_str}"
         )
 
-    # Reporte
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("📊 REPORTE DE AUDITORÍA DOCUMENTAL")
-    print("="*60)
+    print("=" * 60)
 
     if ok_items:
         print("\n[Puntos Positivos]")
@@ -253,12 +398,12 @@ def check_docs(target_dir: Path):
         print("\n[Acciones Críticas Requeridas]")
         for a in alerts:
             print(f"  {a}")
-        print("\n💡 RECOMENDACIÓN: Actualiza el README.md y .env.example antes de concluir la tarea.")
-        print("="*60 + "\n")
+        print("\n💡 RECOMENDACIÓN: Actualiza el README.md raíz y .env.example antes de concluir la tarea.")
+        print("=" * 60 + "\n")
         return 1
     else:
         print("\n✨ ¡Todo en orden! La documentación parece sincronizada con los cambios de código.")
-        print("="*60 + "\n")
+        print("=" * 60 + "\n")
         return 0
 
 
