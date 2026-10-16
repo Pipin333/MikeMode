@@ -32,8 +32,9 @@ Cada vez que soluciones un error, implementes una funcionalidad o refactorices c
 
 ---
 
-## Protocolo de Reporte Final
-En tu respuesta final al usuario, incluye siempre un bloque explícito:
+## Protocolo de Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)
+- **Por defecto (Ejecución Silenciosa)**: Aplica rigurosamente todos los mandatos de depuración, TDD, higiene de diffs y ejecución de pruebas en segundo plano **SIN imprimir el bloque de reporte al final de tu respuesta**.
+- **Bajo Demanda (`/report`)**: Únicamente cuando el usuario escriba `/report` o solicite explícitamente un reporte de auditoría de los guardianes, incluye el bloque:
 
 ```markdown
 ### 🐞 Depuración, Testing e Higiene (Debug-Guardian)

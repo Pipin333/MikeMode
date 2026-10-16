@@ -392,10 +392,245 @@ def run_full_check(target_path: Path) -> int:
     return 0
 
 
+def _get_git_telemetry(target_path: Path) -> dict[str, str]:
+    """Obtiene metadatos deterministas del estado actual de Git (rama, commit HEAD, estado).
+
+    Args:
+        target_path: Directorio raíz del repositorio.
+
+    Returns:
+        Diccionario con claves `branch`, `head_sha` y `status_short`.
+    """
+    branch = "unknown"
+    head_sha = "unknown"
+    status_short = ""
+
+    if not is_git_repository(target_path):
+        return {"branch": branch, "head_sha": head_sha, "status_short": status_short}
+
+    try:
+        b_res = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=target_path,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if b_res.returncode == 0:
+            branch = b_res.stdout.strip()
+
+        h_res = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=target_path,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if h_res.returncode == 0:
+            head_sha = h_res.stdout.strip()
+
+        s_res = subprocess.run(
+            ["git", "status", "--short"],
+            cwd=target_path,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if s_res.returncode == 0:
+            status_short = s_res.stdout.strip()
+    except Exception:
+        pass
+
+    return {"branch": branch, "head_sha": head_sha, "status_short": status_short}
+
+
+def generate_handover(
+    target_path: Path,
+    summary: str = " Estado en progreso guardado para continuar en la siguiente sesión.",
+    next_step: str = "Revisar frontera activa de tareas y continuar con el siguiente corte vertical.",
+    dead_ends: str = "Ninguno registrado en este turno.",
+) -> int:
+    """Genera el artefacto `.scratch/HANDOVER.md` para pausar una sesión de forma segura (`pause-safely`).
+
+    Args:
+        target_path: Directorio del proyecto.
+        summary: Resumen conciso de lo completado y verificado hasta el momento.
+        next_step: Siguiente paso concreto (corte vertical) a ejecutar al retomar.
+        dead_ends: Enfoques descartados o callejones sin salida que no deben repetirse.
+
+    Returns:
+        Código de salida (0 en caso de éxito).
+    """
+    from datetime import datetime, timezone
+
+    target_path = target_path.resolve()
+    scratch_dir = target_path / ".scratch"
+    scratch_dir.mkdir(parents=True, exist_ok=True)
+
+    telemetry = _get_git_telemetry(target_path)
+    task_info = audit_task_graph(target_path)
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    status_block = telemetry["status_short"] if telemetry["status_short"] else "Árbol de trabajo limpio (working tree clean)"
+    frontier_list = (
+        ", ".join(task_info["ready_frontier_samples"])
+        if task_info["ready_frontier_samples"]
+        else "Sin tickets pendientes en .scratch/"
+    )
+
+    handover_content = f"""# 🔄 Session Handover Snapshot (`pause-safely` / `session-pickup`)
+
+- **Timestamp**: `{timestamp}`
+- **Git Branch**: `{telemetry['branch']}`
+- **Git HEAD**: `{telemetry['head_sha']}`
+- **Ready Frontier (DAG)**: {frontier_list}
+
+---
+
+## 1. Resumen de Avance Verificado
+{summary.strip()}
+
+## 2. Próximo Corte Vertical Inmediato (`Next Step`)
+{next_step.strip()}
+
+## 3. Callejones sin Salida y Restricciones (`Dead-Ends — Do Not Repeat`)
+{dead_ends.strip()}
+
+## 4. Estado del Árbol de Trabajo al Pausar
+```text
+{status_block}
+```
+"""
+    handover_path = scratch_dir / "HANDOVER.md"
+    handover_path.write_text(handover_content, encoding="utf-8")
+    print(f"✅ [Handover] Snapshot de sesión guardado en: {handover_path}")
+    return 0
+
+
+def run_pickup(target_path: Path) -> int:
+    """Lee `.scratch/HANDOVER.md` y verifica la coherencia del estado de Git para retomar la sesión (`session-pickup`).
+
+    Args:
+        target_path: Directorio del proyecto.
+
+    Returns:
+        0 si el archivo HANDOVER.md existe y fue procesado, 1 si no existe.
+    """
+    target_path = target_path.resolve()
+    handover_path = target_path / ".scratch" / "HANDOVER.md"
+    if not handover_path.is_file():
+        print(f"⚠️ [Pickup] No se encontró {handover_path}. No hay sesión previa pausada.")
+        return 1
+
+    content = handover_path.read_text(encoding="utf-8", errors="replace")
+    telemetry = _get_git_telemetry(target_path)
+
+    print("=" * 70)
+    print("🚀 [Session Pickup] Retomando contexto desde .scratch/HANDOVER.md")
+    print(f"Rama actual: {telemetry['branch']} | HEAD actual: {telemetry['head_sha']}")
+    print("=" * 70)
+    print(content)
+    return 0
+
+
+def run_babysit_check(target_path: Path) -> int:
+    """Inspecciona la salud de la rama actual para aterrizar un PR (`babysit`): conflictos de merge, árbol sucio y estado de Git.
+
+    Args:
+        target_path: Directorio del repositorio a inspeccionar.
+
+    Returns:
+        0 si la rama no presenta conflictos de merge sin resolver, 1 si existen conflictos bloqueantes.
+    """
+    target_path = target_path.resolve()
+    conflict_pattern = re.compile(r"^(?:<<<<<<< |=======$|>>>>>>> )")
+    conflicted_files: List[Tuple[Path, int]] = []
+
+    for root, dirs, files in os.walk(target_path):
+        dirs[:] = [d for d in dirs if d not in IGNORE_DIRS]
+        for file in files:
+            p = Path(root) / file
+            if p.suffix in CODE_EXTENSIONS or p.suffix in {".md", ".json", ".yml", ".yaml", ".toml"}:
+                try:
+                    with open(p, "r", encoding="utf-8", errors="ignore") as f:
+                        for idx, line in enumerate(f, start=1):
+                            if conflict_pattern.match(line.rstrip("\r\n")):
+                                conflicted_files.append((p, idx))
+                                break
+                except Exception:
+                    continue
+
+    telemetry = _get_git_telemetry(target_path)
+    print("=" * 70)
+    print(f"🛡️  [PR Babysit] Diagnóstico de convergencia en rama '{telemetry['branch']}' ({telemetry['head_sha']})")
+    print("=" * 70)
+
+    if conflicted_files:
+        print("❌ Conflictos de merge sin resolver detectados:")
+        for cf, line_no in conflicted_files:
+            rel = cf.relative_to(target_path).as_posix()
+            print(f"  - {rel} (línea {line_no})")
+        return 1
+
+    print("✅ Cero marcadores de conflicto de merge en el árbol.")
+    if telemetry["status_short"]:
+        print("ℹ️  Cambios locales pendientes de commit:")
+        for line in telemetry["status_short"].splitlines()[:10]:
+            print(f"    {line}")
+    else:
+        print("✅ Árbol de trabajo limpio (working tree clean).")
+    return 0
+
+
+def run_consolidated_report(target_path: Path) -> int:
+    """Ejecuta en cadena los 5 scripts de la suite de Guardianes para el comando bajo demanda `/report`.
+
+    Args:
+        target_path: Directorio del proyecto a auditar.
+
+    Returns:
+        0 si se completó el reporte consolidado.
+    """
+    target_path = target_path.resolve()
+    plugins_root = Path(__file__).resolve().parents[4]
+    guardians = [
+        ("Architect-Guardian", plugins_root / "architect-guardian" / "skills" / "architect-guardian" / "scripts" / "architect_guard.py", [str(target_path)]),
+        ("Debug-Guardian", plugins_root / "debug-guardian" / "skills" / "debug-guardian" / "scripts" / "debug_guard.py", ["check", "--path", str(target_path)]),
+        ("Doc-Guardian", plugins_root / "doc-guardian" / "skills" / "doc-guardian" / "scripts" / "doc_guard.py", ["check", "--path", str(target_path)]),
+        ("Docker-Guardian", plugins_root / "docker-guardian" / "skills" / "docker-guardian" / "scripts" / "docker_guard.py", ["check", "--path", str(target_path)]),
+        ("Frontend-Guardian", plugins_root / "frontend-guardian" / "skills" / "frontend-guardian" / "scripts" / "frontend_guard.py", [str(target_path)]),
+    ]
+
+    print("=" * 70)
+    print("📊 MODO MIKE™ — REPORTE CONSOLIDADO DE LOS 5 GUARDIANES (/report)")
+    print("=" * 70)
+
+    for name, script_path, args in guardians:
+        if not script_path.is_file():
+            continue
+        res = subprocess.run(
+            [sys.executable, str(script_path), *args],
+            cwd=target_path,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        status_icon = "✅" if res.returncode == 0 else "⚠️"
+        print(f"\n{status_icon} [{name}] (exit code: {res.returncode})")
+        output_lines = [line for line in res.stdout.splitlines() if line.strip()]
+        for line in output_lines[:15]:
+            print(f"  {line}")
+    return 0
+
+
 def main() -> int:
     """Punto de entrada de la CLI de Architect-Guardian."""
     parser = argparse.ArgumentParser(
-        description="Architect-Guardian CLI: Auditoría de arquitectura, dominio y calidad de diseño."
+        description="Architect-Guardian CLI: Auditoría de arquitectura, continuidad de sesión (handover/pickup), babysit y reporte consolidado."
     )
     parser.add_argument(
         "target",
@@ -408,12 +643,61 @@ def main() -> int:
         action="store_true",
         help="Audita todos los archivos en vez de limitarse al diff de Git",
     )
+    parser.add_argument(
+        "--handover",
+        action="store_true",
+        help="Genera .scratch/HANDOVER.md para pausar la sesión de forma segura (pause-safely)",
+    )
+    parser.add_argument(
+        "--summary",
+        default="Avance verificado en la sesión actual.",
+        help="Resumen de avance para --handover",
+    )
+    parser.add_argument(
+        "--next-step",
+        default="Continuar con el siguiente corte vertical de la frontera activa.",
+        help="Próximo paso inmediato para --handover",
+    )
+    parser.add_argument(
+        "--dead-ends",
+        default="Ninguno registrado.",
+        help="Callejones sin salida descartados para --handover",
+    )
+    parser.add_argument(
+        "--pickup",
+        action="store_true",
+        help="Lee .scratch/HANDOVER.md y valida el estado de Git al retomar una sesión (session-pickup)",
+    )
+    parser.add_argument(
+        "--babysit",
+        action="store_true",
+        help="Verifica conflictos de merge y estado del árbol para aterrizar una rama o PR (babysit)",
+    )
+    parser.add_argument(
+        "--report",
+        action="store_true",
+        help="Ejecuta los 5 Guardianes y genera el reporte ejecutivo consolidado (/report)",
+    )
     args = parser.parse_args()
     target_path = Path(args.target).resolve()
 
     if not target_path.exists():
         print(f"❌ Error: La ruta '{target_path}' no existe.", file=sys.stderr)
         return 1
+
+    if args.handover:
+        return generate_handover(
+            target_path,
+            summary=args.summary,
+            next_step=args.next_step,
+            dead_ends=args.dead_ends,
+        )
+    if args.pickup:
+        return run_pickup(target_path)
+    if args.babysit:
+        return run_babysit_check(target_path)
+    if args.report:
+        return run_consolidated_report(target_path)
 
     return run_full_check(target_path)
 

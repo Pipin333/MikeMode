@@ -17,7 +17,8 @@ target/
 .cache/
 *.tmp
 
-# Graphify generated artifacts
+# Graphify and Session Handover artifacts
+.scratch/
 graphify-out/
 .graphify/
 graph.html

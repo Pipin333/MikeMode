@@ -32,9 +32,12 @@ Los modelos de lenguaje asistiendo en desarrollo tienden a acelerar la **entrop�
    - `two_axis_code_review.md`: Revisión independiente de estándares frente a requerimientos.
    - `fowler_code_smells.md`: Catálogo completo de 12 code smells de Fowler adaptados para IA.
 3. **Herramienta CLI Integrada (`architect_guard.py`)**:
-   - Detección de code smells en el diff de Git o archivos (`Mysterious Name`, `Message Chains`, `Speculative Generality`).
+   - Detección de code smells en el diff de Git o archivos (`Mysterious Name`, `Message Chains`, `Speculative Generality`, `AI Slop Comment`).
    - Auditoría de salud de artefactos de dominio (`GLOSSARY.md` y directorio `docs/adr/`).
    - Detección de grafos de tickets y cálculo de la frontera de tareas listas (*Ready Frontier*).
+   - Continuidad operativa entre sesiones (`--handover` / `pause-safely` y `--pickup` / `session-pickup` vía `.scratch/HANDOVER.md`).
+   - Inspección de convergencia y conflictos de ramas/PRs (`--babysit`).
+   - Orquestador del reporte consolidado de los 5 Guardianes bajo demanda (`--report` / `/report`).
 
 ---
 
@@ -46,6 +49,18 @@ python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architec
 
 # 2. Auditar exhaustivamente todos los archivos del proyecto (sin limitarse al diff):
 python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architect-guardian/scripts/architect_guard.py . --all-files
+
+# 3. Guardar snapshot de sesión (.scratch/HANDOVER.md) antes de pausar (/handover):
+python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architect-guardian/scripts/architect_guard.py . --handover --summary "..." --next-step "..." --dead-ends "..."
+
+# 4. Retomar contexto desde .scratch/HANDOVER.md al abrir nueva sesión (/pickup):
+python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architect-guardian/scripts/architect_guard.py . --pickup
+
+# 5. Diagnosticar conflictos de merge y convergencia de rama/PR (/babysit):
+python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architect-guardian/scripts/architect_guard.py . --babysit
+
+# 6. Ejecutar el reporte consolidado de los 5 Guardianes bajo demanda (/report):
+python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architect-guardian/scripts/architect_guard.py . --report
 ```
 
 ---
@@ -58,15 +73,20 @@ python C:/Users/Petiso/.gemini/config/plugins/architect-guardian/skills/architec
 ├── README.md
 ├── rules/
 │   └── AGENTS.md
-└── skills/
-    └── architect-guardian/
-        ├── SKILL.md
-        ├── references/
-        │   ├── deep_modules.md
-        │   ├── domain_modeling_and_glossary.md
-        │   ├── task_graph_decomposition.md
-        │   ├── two_axis_code_review.md
-        │   └── fowler_code_smells.md
-        └── scripts/
-            └── architect_guard.py
+├── skills/
+│   └── architect-guardian/
+│       ├── SKILL.md
+│       ├── references/
+│       │   ├── anti_slop_and_no_comments.md
+│       │   ├── blast_radius_and_code_archaeology.md
+│       │   ├── deep_modules.md
+│       │   ├── domain_modeling_and_glossary.md
+│       │   ├── fowler_code_smells.md
+│       │   ├── session_handover_and_pr_babysit.md
+│       │   ├── task_graph_decomposition.md
+│       │   └── two_axis_code_review.md
+│       └── scripts/
+│           └── architect_guard.py
+└── tests/
+    └── test_architect_guard.py
 ```

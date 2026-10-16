@@ -58,4 +58,6 @@ Antes de marcar tu tarea como finalizada o entregar el mensaje al usuario:
    - Si no existe `README.md` en la raíz, créalo utilizando la estructura estándar (descripción, requisitos, instalación, variables de entorno, uso, scripts).
    - Si trabajas en un monorepo o repositorio de plugins/skills, actualiza el `README.md` del subpaquete **y obligatoriamente también el índice del `README.md` raíz**.
 3. **Sincroniza `.env.example`**: Asegúrate de que toda variable requerida en código tenga su contraparte documentada en `.env.example` con un valor de ejemplo o descripción.
-4. **Comunica los cambios documentados y estándares**: En tu respuesta final, incluye siempre un breve resumen bajo el encabezado `### 📝 Documentación Actualizada y Estándares` indicando qué partes del README fueron ajustadas y confirmando el cumplimiento de PEP 8/257 o sus equivalentes.
+4. **Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)**:
+   - **Por defecto (Ejecución Silenciosa)**: Actualiza los archivos `README.md` y `.env.example` y aplica PEP 8/257 directamente en tus ediciones **SIN imprimir un bloque de reporte documental al final de cada mensaje**.
+   - **Bajo Demanda (`/report`)**: Únicamente cuando el usuario escriba `/report` o solicite explícitamente el reporte de los guardianes, incluye el resumen bajo el encabezado `### 📝 Documentación Actualizada y Estándares (Doc-Guardian)`.

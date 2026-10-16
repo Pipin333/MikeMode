@@ -76,10 +76,16 @@ Al evaluar el resultado de una implementación:
 - **Eje 2: Fidelidad a la Especificación**: Comprueba que no falte ningún requerimiento, que no haya comportamiento no solicitado (*scope creep*), y que los casos borde cumplan la spec.
 - Consulta [Revisión en Dos Ejes](./references/two_axis_code_review.md).
 
+### 6. Continuidad de Sesión (`/handover`, `/pickup`) y Convergencia de PRs (`/babysit`)
+- **Pausa Segura (`/handover`)**: Ejecuta `architect_guard.py . --handover --summary "..." --next-step "..." --dead-ends "..."` para persistir `.scratch/HANDOVER.md`.
+- **Retoma sin Amnesia (`/pickup`)**: Ejecuta `architect_guard.py . --pickup` al iniciar una nueva sesión sobre trabajo en vuelo.
+- **Convergencia de PRs (`/babysit`)**: Ejecuta `architect_guard.py . --babysit` para detectar conflictos de merge y guiar la rama hasta estado *merge-ready*.
+- Consulta [Continuidad de Sesión y Babysit de PRs](./references/session_handover_and_pr_babysit.md).
+
 ---
 
-## 📝 Protocolo de Reporte Final
-En toda respuesta que involucre diseño de software, refactorización o descomposición, incluye siempre el bloque:
+## 📝 Protocolo de Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)
+Por defecto, ejecuta todos los mandatos en silencio sin añadir bloques de reporte al final del mensaje. Únicamente cuando el usuario escriba `/report` (o pida el reporte de los guardianes), ejecuta `architect_guard.py . --report` e incluye el bloque:
 
 ```markdown
 ### 🏛️ Arquitectura, Dominio y Diseño (Architect-Guardian)

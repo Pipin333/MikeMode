@@ -38,10 +38,16 @@ Cada vez que diseñes, refactorices, implementes o revises código o arquitectur
    - **Mapeo de Radio de Impacto**: Antes de modificar una función nuclear, contrato compartido, modelo de base de datos o migración (ej. Alembic/SQLAlchemy), mapea exhaustivamente todos los puntos de llamada (*call sites*) aguas abajo para prevenir roturas colaterales.
    - **Arqueología de Código ("Why")**: Prohibido asumir que código legado está "mal hecho" o "desactualizado" sin antes revisar el historial (`git log`, mensajes de commits previos y PRs). Entiende *por qué* se tomó esa decisión técnica antes de intentar reescribirla.
 
+7. **Continuidad Operativa entre Sesiones (`/handover`, `/pickup`) y Aterrizaje de Ramas/PRs (`/babysit`)**:
+   - **Pausa Segura (`/handover` / `pause-safely`)**: Cuando el usuario pida pausar la sesión o guardar el estado para otro turno, genera `.scratch/HANDOVER.md` (vía `architect_guard.py --handover`) documentando el avance verificado, el próximo corte vertical inmediato y los callejones sin salida (*dead-ends*) descartados.
+   - **Retoma sin Amnesia (`/pickup` / `session-pickup`)**: Al retomar una tarea con `.scratch/HANDOVER.md` presente o cuando el usuario invoque `/pickup`, ejecuta `architect_guard.py --pickup`, valida el `HEAD` de Git y continúa desde el paso pendiente sin repetir enfoques descartados.
+   - **Convergencia de PRs (`/babysit`)**: Cuando el usuario pida aterrizar o cuidar una rama/PR, ejecuta `architect_guard.py --babysit`, resuelve conflictos contra la rama base preservando invariantes y verifica que las pruebas locales y de CI queden en verde.
+
 ---
 
-## Protocolo de Reporte Final
-En tu respuesta final al usuario, incluye siempre el bloque explícito:
+## Protocolo de Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)
+- **Por defecto (Ejecución Silenciosa)**: Cumple rigurosamente todos los mandatos anteriores en segundo plano durante tu trabajo **SIN imprimir el bloque de reporte al final de tu respuesta**, manteniendo la comunicación concisa y libre de ruido.
+- **Bajo Demanda (`/report`)**: Únicamente cuando el usuario escriba `/report` o solicite explícitamente un reporte de auditoría de los guardianes, incluye el bloque:
 
 ```markdown
 ### 🏛️ Arquitectura, Dominio y Diseño (Architect-Guardian)

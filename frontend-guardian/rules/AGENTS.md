@@ -46,8 +46,9 @@ Cada vez que crees, modifiques, rediseñes o refactorices interfaces de usuario,
 
 ---
 
-## Protocolo de Reporte Final
-En tu respuesta final al usuario, incluye siempre el bloque explícito:
+## Protocolo de Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)
+- **Por defecto (Ejecución Silenciosa)**: Cumple todos los mandatos de accesibilidad, tokens, motion, 5 estados, CLS=0 y paridad visual directamente en el código **SIN imprimir el bloque de reporte al final de tu respuesta**.
+- **Bajo Demanda (`/report`)**: Únicamente cuando el usuario escriba `/report` o solicite explícitamente un reporte de auditoría de los guardianes, incluye el bloque:
 
 ```markdown
 ### 🎨 Diseño y Frontend (Frontend-Guardian)

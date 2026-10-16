@@ -57,11 +57,12 @@ Para que cualquier usuario en GitHub pueda clonar y correr el proyecto sin fricc
 
 ---
 
-## 4. Protocolo de Ejecución al Finalizar Cambios
+## 4. Protocolo de Ejecución Silenciosa y Reporte Bajo Demanda (`/report`)
 Antes de dar por terminada tu intervención:
-1. **Verifica la existencia y validez de la tríada**: `Dockerfile`, `docker-compose.yml` y `.dockerignore`.
+1. **Verifica en silencio la existencia y validez de la tríada**: `Dockerfile`, `docker-compose.yml` y `.dockerignore`.
 2. **Sincroniza los puertos y variables** entre el código, `docker-compose.yml` y `README.md`.
-3. **Comunica el estado de containerización** en tu respuesta final bajo el encabezado:
+3. **Ejecución Silenciosa por Defecto**: Mantén la containerización al día **SIN imprimir el bloque de reporte en respuestas normales**.
+4. **Reporte Bajo Demanda (`/report`)**: Únicamente cuando el usuario escriba `/report` o pida explícitamente el reporte de los guardianes, incluye el bloque:
    ```markdown
    ### 🐳 Containerización y Portabilidad (Docker-Guardian)
    - **`Dockerfile`**: [Creado/Actualizado] Multi-stage para [Stack], usuario sin privilegios configurado.
