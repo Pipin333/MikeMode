@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brand harness</title>
+<!--
+  THROWAWAY FILE. Not part of the real project. Delete it once the tokens are locked.
+
+  How to use it:
+  1. Replace every [BRACKET] with the owner's real content. Never lorem ipsum.
+     Not every site is a portfolio. The h1 is whatever this page actually opens
+     with, which on some sites is a name and an address or a price, not a
+     sentence. The content unit is a project, a service, a dish, or a feature.
+     Use text of the length the real page will carry, so the type is judged
+     on what ships.
+  2. Fill the three :root blocks with three genuinely different directions.
+
+     THE THREE SHIPPED HERE ARE NOT SUGGESTIONS. They exist to show the axes
+     the variants have to differ on: ground mode (mid / light / dark), accent
+     family (orange / red / yellow, three families, not three blues), and
+     where the personality sits (colour / type / layout). Replacing all of
+     these values is the job. If the winning palette is one of these three
+     unchanged, the step did not happen.
+
+     Derive the real values by the workflow in references/palette.md: ground
+     before hue, a named material before a hex, neutrals tinted from the
+     accent, contrast checked before the owner sees anything. Do not ship a
+     variant from the AI-default set unless the owner chose it: cream + serif
+     + terracotta, near-black + acid accent, broadsheet hairlines, or anything
+     on the blue-to-violet arc that arrived without a reason.
+  3. Swap in real font links in <head> for each variant.
+  4. Open it, compare side by side, and point at every link, button and card
+     before you judge. Half of what separates a designed page from a dead one
+     is only visible on hover and on tab.
+  5. Name the signature element next to the winner. The harness does not show
+     it, and it is the thing the page is remembered by.
+  6. Pick one.
+  7. Copy the winning values, including --dur and --ease, into the build brief
+     as locked tokens.
+-->
+<style>
+  /* ---------- VARIANT A: signage ----------
+     Mid-tone ground, warm neutrals pulled from the accent hue, signal orange.
+     Personality sits in the colour. */
+  .v-a {
+    --bg:        #2E3A34;
+    --surface:   #364339;
+    --text:      #EDEFE9;
+    --muted:     #A3AFA4;
+    --accent:    #E4572E;
+    --on-accent: #1A0F09;
+    --radius:    2px;
+    --display:   Georgia, serif;          /* replace */
+    --body:      system-ui, sans-serif;   /* replace */
+    --dur:       160ms;
+    --ease:      cubic-bezier(.2,.7,.3,1);
+    --step-lg:   clamp(2.5rem, 6vw, 4rem);
+    --step-md:   1.25rem;
+    --step-sm:   0.875rem;
+  }
+  /* ---------- VARIANT B: institutional paper ----------
+     Light ground, near-black text, oxblood. Personality sits in the type.
+     Nothing here is decorative, which is the argument it is making. */
+  .v-b {
+    --bg:        #FBFAF7;
+    --surface:   #F1EFE9;
+    --text:      #16181A;
+    --muted:     #5C6166;
+    --accent:    #7A1E2B;
+    --on-accent: #FBFAF7;
+    --radius:    0px;
+    --display:   system-ui, sans-serif;
+    --body:      system-ui, sans-serif;
+    --dur:       120ms;
+    --ease:      ease-out;
+    --step-lg:   clamp(2.25rem, 5vw, 3.5rem);
+    --step-md:   1.125rem;
+    --step-sm:   0.8125rem;
+  }
+  /* ---------- VARIANT C: warm dark ----------
+     Warm near-black rather than the blue-black everything defaults to.
+     Amber. Personality sits in the layout. */
+  .v-c {
+    --bg:        #14120E;
+    --surface:   #1E1B15;
+    --text:      #F0E8D8;
+    --muted:     #A2977F;
+    --accent:    #D8A657;
+    --on-accent: #14120E;
+    --radius:    999px;
+    --display:   Georgia, serif;
+    --body:      system-ui, sans-serif;
+    --dur:       200ms;
+    --ease:      cubic-bezier(.16,1,.3,1);
+    --step-lg:   clamp(2.5rem, 6vw, 4.25rem);
+    --step-md:   1.1875rem;
+    --step-sm:   0.8125rem;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #08090B; }
+  .variant { background: var(--bg); color: var(--text); font-family: var(--body);
+             padding: 2.5rem 1.5rem 3.5rem; border-bottom: 1px solid #23262C; }
+  .wrap { max-width: 68ch; margin: 0 auto; }
+
+  .nav { display: flex; align-items: center; justify-content: space-between;
+         padding-bottom: 2.5rem; }
+  .logo { display: flex; align-items: center; gap: .5rem;
+          font-family: var(--display); font-size: var(--step-md); letter-spacing: -0.01em; }
+  .logo svg { display: block; }
+  .nav-links { display: flex; gap: 1.25rem; font-size: var(--step-sm); color: var(--muted); }
+
+  h1 { font-family: var(--display); font-size: var(--step-lg); line-height: 1.05;
+       letter-spacing: -0.02em; margin: 0 0 1rem; }
+  .lede { font-size: var(--step-md); line-height: 1.55; margin: 0 0 1.75rem; }
+  .muted { color: var(--muted); font-size: var(--step-sm); line-height: 1.6; }
+
+  .btn { display: inline-block; background: var(--accent); color: var(--on-accent);
+         padding: .7rem 1.25rem; border-radius: var(--radius); text-decoration: none;
+         font-size: var(--step-sm); font-weight: 600; }
+  .btn-ghost { background: transparent; color: var(--text);
+               border: 1px solid var(--muted); margin-left: .5rem; }
+
+  .card { background: var(--surface); border-radius: var(--radius);
+          padding: 1.25rem; margin-top: 2.25rem; }
+  .card h3 { font-family: var(--display); margin: 0 0 .4rem; font-size: var(--step-md); }
+
+  .tokens { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 2.25rem; }
+  .swatch { flex: 1 1 90px; border-radius: var(--radius); overflow: hidden;
+            border: 1px solid rgba(127,127,127,.25); }
+  .chip { height: 44px; }
+  .swatch span { display: block; padding: .35rem .5rem; font-size: 11px;
+                 font-family: ui-monospace, monospace; color: var(--muted); }
+  .label { font-size: 11px; letter-spacing: .12em; text-transform: uppercase;
+           color: var(--muted); font-family: ui-monospace, monospace; margin-bottom: 1.5rem; }
+
+  /* ---------- STATES ----------
+     Every interactive element answers a cursor and a tab key. This is not
+     decoration and it is not a non-goal. A variant that looks fine here and
+     dead in the browser is the "plain rather than minimal" failure, and this
+     block is where you see it before it reaches the brief. Judge the states,
+     not just the still frame. */
+  a { transition: color var(--dur) var(--ease), background-color var(--dur) var(--ease),
+                  border-color var(--dur) var(--ease), transform var(--dur) var(--ease),
+                  opacity var(--dur) var(--ease); }
+  .nav-links a { color: var(--muted); text-decoration: none;
+                 text-underline-offset: .25em; }
+  .nav-links a:hover { color: var(--text); text-decoration: underline; }
+  .btn:hover { transform: translateY(-1px); opacity: .92; }
+  .btn-ghost:hover { border-color: var(--text); }
+  .card { transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+          border: 1px solid transparent; }
+  .card:hover { border-color: var(--accent); }
+
+  /* Focus ring in the accent, never the browser default, never removed. */
+  a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+
+  .variant ::selection { background: var(--accent); color: var(--bg); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 1ms !important; animation-duration: 1ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Duplicate this block per variant. Only the class on .variant changes. -->
+<section class="variant v-a">
+  <div class="wrap">
+    <div class="label">Variant A · [two-word direction]</div>
+
+    <nav class="nav">
+      <div class="logo">
+        <!-- Replace with the real SVG mark. Placeholder monogram below. -->
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <rect width="24" height="24" rx="3" fill="var(--accent)"></rect>
+        </svg>
+        [NAME]
+      </div>
+      <div class="nav-links"><a href="#">Work</a><a href="#">About</a><a href="#">CV</a></div>
+    </nav>
+
+    <h1>[THE LINE THIS PAGE OPENS WITH]</h1>
+    <p class="lede">[REAL SUPPORTING PARAGRAPH. Their bio, their product description, their hours and address. Their actual words, two or three sentences, so the type is judged on real text.]</p>
+
+    <a class="btn" href="#">[PRIMARY ACTION]</a>
+    <a class="btn btn-ghost" href="#">[secondary, or delete]</a>
+
+    <div class="card">
+      <h3>[CONTENT UNIT TITLE]</h3>
+      <p class="muted">[One real sentence about it, plus the result, the price, or the metric.]</p>
+    </div>
+
+    <div class="tokens">
+      <div class="swatch"><div class="chip" style="background:var(--bg)"></div><span>bg</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--surface)"></div><span>surface</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--text)"></div><span>text</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--muted)"></div><span>muted</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--accent)"></div><span>accent</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--on-accent)"></div><span>on-accent</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="variant v-b">
+  <div class="wrap">
+    <div class="label">Variant B · [two-word direction]</div>
+
+    <nav class="nav">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <rect width="24" height="24" rx="3" fill="var(--accent)"></rect>
+        </svg>
+        [NAME]
+      </div>
+      <div class="nav-links"><a href="#">Work</a><a href="#">About</a><a href="#">CV</a></div>
+    </nav>
+
+    <h1>[THE LINE THIS PAGE OPENS WITH]</h1>
+    <p class="lede">[REAL SUPPORTING PARAGRAPH. Their bio, their product description, their hours and address. Their actual words, two or three sentences, so the type is judged on real text.]</p>
+
+    <a class="btn" href="#">[PRIMARY ACTION]</a>
+    <a class="btn btn-ghost" href="#">[secondary, or delete]</a>
+
+    <div class="card">
+      <h3>[CONTENT UNIT TITLE]</h3>
+      <p class="muted">[One real sentence about it, plus the result, the price, or the metric.]</p>
+    </div>
+
+    <div class="tokens">
+      <div class="swatch"><div class="chip" style="background:var(--bg)"></div><span>bg</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--surface)"></div><span>surface</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--text)"></div><span>text</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--muted)"></div><span>muted</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--accent)"></div><span>accent</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--on-accent)"></div><span>on-accent</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="variant v-c">
+  <div class="wrap">
+    <div class="label">Variant C · [two-word direction]</div>
+
+    <nav class="nav">
+      <div class="logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+          <rect width="24" height="24" rx="3" fill="var(--accent)"></rect>
+        </svg>
+        [NAME]
+      </div>
+      <div class="nav-links"><a href="#">Work</a><a href="#">About</a><a href="#">CV</a></div>
+    </nav>
+
+    <h1>[THE LINE THIS PAGE OPENS WITH]</h1>
+    <p class="lede">[REAL SUPPORTING PARAGRAPH. Their bio, their product description, their hours and address. Their actual words, two or three sentences, so the type is judged on real text.]</p>
+
+    <a class="btn" href="#">[PRIMARY ACTION]</a>
+    <a class="btn btn-ghost" href="#">[secondary, or delete]</a>
+
+    <div class="card">
+      <h3>[CONTENT UNIT TITLE]</h3>
+      <p class="muted">[One real sentence about it, plus the result, the price, or the metric.]</p>
+    </div>
+
+    <div class="tokens">
+      <div class="swatch"><div class="chip" style="background:var(--bg)"></div><span>bg</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--surface)"></div><span>surface</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--text)"></div><span>text</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--muted)"></div><span>muted</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--accent)"></div><span>accent</span></div>
+      <div class="swatch"><div class="chip" style="background:var(--on-accent)"></div><span>on-accent</span></div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

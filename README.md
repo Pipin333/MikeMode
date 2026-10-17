@@ -19,6 +19,7 @@ Repositorio centralizado con los plugins, guardianes y skills globales para **Go
 | **`frontend-guardian`** | Guardián | Excelencia frontend: accesibilidad radical (a11y/WCAG 2.2 AA), diseño por tokens, microinteracciones fluidas, regla de los 5 estados y Core Web Vitals (cero CLS). | Reglas (`AGENTS.md`), estándares a11y, tokens modulares, scripts (`frontend_guard.py`). |
 | **`hermes-auto-learner`** | Skill / Tool | Motor de auto-aprendizaje procedural, destilación en 1 solo turno (`/learn`) y auto-mutación conducida por fallos (*Failure-Driven Mutation*) inspirado en NousResearch Hermes Agent. | Protocolo `SKILL.md`, estándares Hardline ($\le 60$ caracteres), salvaguardas Balthasar-2, validador (`validate_skill.py`). |
 | **`impeccable`** | Skill Suite | Kit de diseño frontend y estándares de calidad visual anti-slop (creado por Paul Bakaus). | Skills de auditoría visual (`critique`, `audit`, `polish`, `bolder`, `quiet`), inspección live, design systems. |
+| **`foreman`** | Playbook / Skill | Playbook de construcción y orquestación web para agentes (por Turki Alshuaibi). Entrevista de 8 compuertas, congelamiento de brief de diseño, verificación responsive (375px), despliegue DNS/SSL y metadatos (SEO, OpenGraph, sitemap, llms.txt). 100% Markdown puro. | Protocolo `SKILL.md`, compuertas 1 a 8, catálogo `vibe-coded-tells.md`, referencias y plantillas en `assets/`. |
 
 ---
 
@@ -47,6 +48,7 @@ Puedes invocar los siguientes flujos directamente escribiéndolos en el chat con
 | **`/learn`** o *"aprende este patrón"* | `hermes-auto-learner` | Destila la solución o flujo recién completado en un skill autónomo, guardándolo en `skills/<nombre>/SKILL.md` y validándolo contra las directivas de NousResearch y Balthasar-2. |
 | **`MAGI: <dilema>`** o *"consulta a MAGI"* | `six-hats-council` | Convoca a los 3 subagentes concurrentes del supercomputador MAGI (Melchior-1 Científica, Balthasar-2 Madre/Seguridad, Caspar-3 Mujer/Disruptora) para deliberar sobre decisiones arquitectónicas críticas. |
 | **`/critique`**, **`/audit`**, **`/polish`** | `impeccable` | Ejecuta una auditoría de diseño frontend sobre la interfaz activa, evaluando jerarquía visual, espaciado, tipografía, accesibilidad y proponiendo mejoras concretas. |
+| **"Ayúdame a construir mi portfolio"** / **"Crea una landing"** | `foreman` | Convierte al agente en capataz de obra web: ejecuta la entrevista de 8 pasos, congela el brief visual, audita responsive en 375px y guía el despliegue con dominio, SSL, 404 y SEO. |
 
 ---
 
@@ -289,6 +291,30 @@ Comandos y verbos integrados para la consola de desarrollo o chats de diseño:
 | `bolder` | Aumenta el carácter visual de diseños sosos o corporativos genéricos. |
 | `quiet` | Reduce el ruido visual en interfaces sobrecargadas o ruidosas. |
 | `live` | Modo interactivo con hot-reloading de variantes de diseño en el navegador. |
+
+---
+
+### 12. 🏗️ `foreman` — Capataz de Construcción Web (Turki Alshuaibi)
+
+Skill: `foreman/skills/foreman/SKILL.md` *(100% Markdown puro, cero código ejecutable)*
+
+Foreman opera como el director de obra web a través de un diálogo procedimental estricto estructurado en 8 compuertas:
+
+1. **Orient**: Inventario de activos reales (logos, fotos, textos verdaderos). Cero datos inventados.
+2. **Decide**: 1 único lector, 1 única acción tras 90 segundos, 1 trabajo central y lista de *non-goals*.
+3. **Look**: Dirección visual, paleta y contraste tipográfico probados en `brand.html` desechable.
+4. **Brief**: Redacción y congelamiento formal de `BUILD-BRIEF.md`.
+5. **Build**: Construcción web bajo restricciones anti-slop (cero botones rotos `#`, cero rellenos).
+6. **Verify**: Verificación destructiva de affordances en móvil (375px) y auditoría contra `vibe-coded-tells.md`.
+7. **Ship**: Guía de despliegue en producción (Cloudflare Pages, Vercel, GitHub Pages), DNS y SSL.
+8. **Index & Metadata**: Configuración de `404.html`, OpenGraph previews, `robots.txt`, `sitemap.xml` y `llms.txt`.
+
+```bash
+# Invocación en chat (Antigravity / Gemini CLI / Claude Code):
+"Ayúdame a construir mi portfolio"
+"Quiero armar una landing page para mi producto"
+"Reconstruyamos la web de documentación con Foreman"
+```
 
 ---
 

@@ -1,0 +1,10 @@
+{
+  "name": "foreman",
+  "displayName": "Foreman by Turki Alshuaibi",
+  "version": "2.2.0",
+  "description": "Playbook de construcción y orquestación web para agentes. Entrevista de 8 compuertas, congelamiento de brief de diseño, verificación responsive (375px), despliegue DNS/SSL y metadatos (SEO, OpenGraph, sitemap, llms.txt).",
+  "author": "Turki Alshuaibi",
+  "license": "MIT",
+  "category": "web-build",
+  "keywords": ["website", "portfolio", "landing-page", "design", "deploy", "dns", "seo", "accessibility", "rtl", "frontend"]
+}

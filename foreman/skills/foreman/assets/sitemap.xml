@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  One entry per real, indexable URL. Use the same host as the canonical tag
+  (www or bare, not both). Regenerate lastmod on build if the stack can.
+  Do not list the 404 page.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://[DOMAIN]/</loc>
+    <lastmod>[YYYY-MM-DD]</lastmod>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://[DOMAIN]/[page]/</loc>
+    <lastmod>[YYYY-MM-DD]</lastmod>
+    <priority>0.8</priority>
+  </url>
+</urlset>

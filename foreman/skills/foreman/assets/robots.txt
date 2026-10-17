@@ -1,0 +1,5 @@
+# Personal site: allow everything, and point crawlers at the sitemap.
+User-agent: *
+Allow: /
+
+Sitemap: https://[DOMAIN]/sitemap.xml

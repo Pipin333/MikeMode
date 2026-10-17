@@ -1,0 +1,20 @@
+# [NAME]
+
+> [One sentence: what they do, for whom, and what the site contains.]
+
+[Two or three sentences of context a model would need to describe them correctly:
+current role or study, the domain they work in, what they are known for, where they
+are based. Written plainly, no marketing language.]
+
+## Pages
+- [/](https://[DOMAIN]/): [what is on it]
+- [/[page]](https://[DOMAIN]/[page]/): [what is on it]
+
+## Selected work
+- [PROJECT]: [one line, plus the result] ([link])
+- [PROJECT]: [one line, plus the result] ([link])
+
+## Contact
+- Email: [address]
+- GitHub: [url]
+- LinkedIn: [url]

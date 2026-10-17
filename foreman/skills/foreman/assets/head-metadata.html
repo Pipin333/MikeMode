@@ -1,0 +1,59 @@
+<!--
+  HEAD METADATA STARTER
+  Replace every [BRACKET]. Use absolute URLs for og:image and canonical, or scrapers will not resolve them.
+  Keep title under ~60 characters and description under ~155.
+-->
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>[NAME] · [ROLE OR THE ONE THING THEY DO]</title>
+<meta name="description" content="[One sentence, written for a human deciding whether to click. Not a keyword list.]">
+<link rel="canonical" href="https://[DOMAIN]/">
+
+<!-- Icons and browser chrome -->
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="[ACCENT OR BG HEX]">
+
+<!-- Open Graph: this is what appears when the link is shared anywhere -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="[NAME]">
+<meta property="og:title" content="[NAME] · [ROLE]">
+<meta property="og:description" content="[Same sentence as the description, or a sharper one.]">
+<meta property="og:url" content="https://[DOMAIN]/">
+<meta property="og:image" content="https://[DOMAIN]/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="[What the card image shows.]">
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="[NAME] · [ROLE]">
+<meta name="twitter:description" content="[Same sentence.]">
+<meta name="twitter:image" content="https://[DOMAIN]/og.png">
+
+<!-- Fonts: preload only the face used in the hero -->
+<link rel="preload" as="font" type="font/woff2" href="/fonts/[DISPLAY-FACE].woff2" crossorigin>
+
+<!-- Structured data: makes the site an entity, not just a page -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "[FULL NAME]",
+  "url": "https://[DOMAIN]/",
+  "image": "https://[DOMAIN]/og.png",
+  "jobTitle": "[ROLE]",
+  "description": "[One sentence.]",
+  "alumniOf": { "@type": "CollegeOrUniversity", "name": "[UNIVERSITY]" },
+  "worksFor": { "@type": "Organization", "name": "[EMPLOYER, or remove this line]" },
+  "knowsAbout": ["[topic]", "[topic]", "[topic]"],
+  "sameAs": [
+    "https://github.com/[handle]",
+    "https://www.linkedin.com/in/[handle]",
+    "https://scholar.google.com/citations?user=[id]"
+  ]
+}
+</script>
