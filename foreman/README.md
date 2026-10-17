@@ -57,3 +57,17 @@ En cualquier sesión de chat con Antigravity, Claude Code o Gemini CLI, simpleme
 - *"Activa Foreman para estructurar este sitio web"*
 
 El agente presentará la tarjeta de orientación de Foreman y comenzará la entrevista guiada.
+
+---
+
+## 🛡️ Salvaguardas MAGI del Ecosistema (Pacto Naoko Akagi)
+
+Para garantizar la máxima seguridad operativa y evitar fricción innecesaria, se aplican 3 salvaguardas vinculantes durante la ejecución de Foreman:
+
+1. **Protocolo de Derivación Rápida (*Emergency Bypass*):**
+   Si el usuario declara expresamente urgencia, un prototipo de prueba o una demo interna, el agente colapsará automáticamente las compuertas 1 a 4 en un intercambio sumario y procederá a la construcción sin fricciones pedagógicas.
+2. **Auditoría de Secretos Pre-Deploy (Paso 5):**
+   Antes de autorizar cualquier `git push` o despliegue a hosting estático (Vercel/Cloudflare Pages), se verificará que ninguna variable sensible (`.env`, API keys) quede expuesta en el código cliente.
+3. **Snapshot de Zona DNS Obligatorio (Paso 7):**
+   Queda estrictamente prohibido que el agente instruya cambios o borrado de registros DNS sin solicitar primero una copia/exportación de la zona actual, con advertencia explícita sobre la intangibilidad de los registros de correo (`MX`, `SPF`, `DKIM`).
+
