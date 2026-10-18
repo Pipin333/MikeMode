@@ -1,6 +1,12 @@
-# Antigravity Global Plugins & Skills Suite
+# MikeMode — Antigravity Global Plugins & Skills Suite
 
-Repositorio centralizado con los plugins, guardianes y skills globales para **Google Antigravity** y agentes de codificación compatibles (Gemini CLI, Claude Code, OpenCode, Codex).
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Pipin333%2FMikeMode-1B4DD1?style=flat&logo=github)](https://github.com/Pipin333/MikeMode)
+[![Status](https://img.shields.io/badge/Status-Public-success?style=flat)]()
+[![Plugins](https://img.shields.io/badge/Plugins-12%20Active-blue?style=flat)]()
+
+Repositorio público centralizado con los plugins, guardianes y skills globales para **Google Antigravity** y agentes de codificación compatibles (Gemini CLI, Claude Code, OpenCode, Codex).
+
+Diseñado bajo la filosofía **Modo Mike™**: máxima profundidad modular, cero ruido en chat (*silent execution by default*), auditoría en dos ejes y continuidad determinista de sesiones.
 
 ---
 
@@ -354,7 +360,7 @@ pip install openpyxl python-docx pypdf pdfplumber python-pptx defusedxml reportl
 New-Item -ItemType Directory -Force -Path "$HOME\.gemini\config"
 
 # 2. Clonar el repositorio como la carpeta 'plugins'
-git clone https://github.com/Pipin333/agent-plugins.git "$HOME\.gemini\config\plugins"
+git clone https://github.com/Pipin333/MikeMode.git "$HOME\.gemini\config\plugins"
 ```
 
 ### En Linux / macOS (Bash / Zsh)
@@ -363,7 +369,7 @@ git clone https://github.com/Pipin333/agent-plugins.git "$HOME\.gemini\config\pl
 mkdir -p ~/.gemini/config
 
 # 2. Clonar el repositorio
-git clone https://github.com/Pipin333/agent-plugins.git ~/.gemini/config/plugins
+git clone https://github.com/Pipin333/MikeMode.git ~/.gemini/config/plugins
 ```
 
 Antigravity detecta y carga de forma automática los plugins y sus skills asociadas al iniciarse.

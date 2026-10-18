@@ -551,7 +551,7 @@ def main() -> None:
                 {
                     "title": "Hoja de Ruta de Implementación",
                     "bullets": [
-                        "Fase 1: Despliegue de plugins en agent-plugins.",
+                        "Fase 1: Despliegue de plugins en MikeMode.",
                         "Fase 2: Refactorización de calculadoracopete a URLs comprimidas.",
                         "Fase 3: Auditoría formal de seguridad previa al deploy.",
                     ],
