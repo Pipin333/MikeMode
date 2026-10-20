@@ -41,6 +41,7 @@ IGNORE_DIRS = {
     "science",
     "fixtures",
     "vendor",
+    "old",
 }
 
 CODE_EXTENSIONS = {

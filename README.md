@@ -25,7 +25,7 @@ Diseñado bajo la filosofía **Modo Mike™**: máxima profundidad modular, cero
 | **`docker-guardian`** | Guardián | Containerización y portabilidad universal con Docker y Docker Compose para despliegue y clonación "1-click run" desde GitHub. | Reglas (`AGENTS.md`), plantillas multi-stage, devcontainer, scripts (`docker_guard.py`). |
 | **`frontend-guardian`** | Guardián | Excelencia frontend: accesibilidad radical (a11y/WCAG 2.2 AA), diseño por tokens, microinteracciones fluidas, regla de los 5 estados y Core Web Vitals (cero CLS). | Reglas (`AGENTS.md`), estándares a11y, tokens modulares, scripts (`frontend_guard.py`). |
 | **`hermes-auto-learner`** | Skill / Tool | Motor de auto-aprendizaje procedural, destilación en 1 solo turno (`/learn`) y auto-mutación conducida por fallos (*Failure-Driven Mutation*) inspirado en NousResearch Hermes Agent. | Protocolo `SKILL.md`, estándares Hardline ($\le 60$ caracteres), salvaguardas Balthasar-2, validador (`validate_skill.py`). |
-| **`impeccable`** | Skill Suite | Kit de diseño frontend y estándares de calidad visual anti-slop (creado por Paul Bakaus). | Skills de auditoría visual (`critique`, `audit`, `polish`, `bolder`, `quiet`), inspección live, design systems. |
+| **`impeccable`** | Skill Suite | Kit de diseño frontend y estándares de calidad visual anti-slop (creado por Paul Bakaus y Abdul Wahab). | Skills de auditoría visual (`critique`, `audit`, `polish`, `bolder`, `quiet`), inspección live, design systems. |
 | **`foreman`** | Playbook / Skill | Playbook de construcción y orquestación web para agentes (por Turki Alshuaibi). Entrevista de 8 compuertas, congelamiento de brief de diseño, verificación responsive (375px), despliegue DNS/SSL y metadatos (SEO, OpenGraph, sitemap, llms.txt). 100% Markdown puro. | Protocolo `SKILL.md`, compuertas 1 a 8, catálogo `vibe-coded-tells.md`, referencias y plantillas en `assets/`. |
 
 ---
@@ -284,7 +284,9 @@ python hermes-auto-learner/skills/hermes-auto-learner/scripts/validate_skill.py 
 
 ---
 
-### 11. 💎 `impeccable` — Suite de Calidad Visual y Frontend
+### 11. 💎 `impeccable` — Suite de Calidad Visual y Frontend (Paul Bakaus & Abdul Wahab)
+
+Suite de diseño, auditoría visual anti-slop y sistemas de diseño para agentes de IA, creada por [Paul Bakaus](https://github.com/pbakaus) y [Abdul Wahab](https://github.com/abdulwahabone).
 
 Comandos y verbos integrados para la consola de desarrollo o chats de diseño:
 
@@ -303,7 +305,8 @@ Comandos y verbos integrados para la consola de desarrollo o chats de diseño:
 
 ### 12. 🏗️ `foreman` — Capataz de Construcción Web (Turki Alshuaibi)
 
-Skill: `foreman/skills/foreman/SKILL.md` *(100% Markdown puro, cero código ejecutable)*
+Skill: `foreman/skills/foreman/SKILL.md` *(100% Markdown puro, cero código ejecutable)*  
+Creado por [Turki Alshuaibi](https://github.com/turkia) ([@turkia](https://x.com/turkia)).
 
 Foreman opera como el director de obra web a través de un diálogo procedimental estricto estructurado en 8 compuertas:
 
@@ -406,3 +409,18 @@ python -m unittest discover -s architect-guardian/tests -p "test_*.py"
 # Ejecutar tests de doc-guardian (Auditoría de manifiestos y README)
 python -m unittest discover -s doc-guardian/tests -p "test_*.py"
 ```
+
+---
+
+## 🎖️ Créditos, Referencias y Reconocimientos
+
+**Modo Mike™** integra, adapta y rinde homenaje al trabajo pionero de creadores excepcionales e investigadores de la comunidad abierta de IA, ingeniería de software y agentes autónomos:
+
+* **[Matt Pocock](https://github.com/mattpocock)** ([@mattpocockuk](https://x.com/mattpocockuk)): Por sentar las bases de los patrones de *Agentic Coding Workflows*, las reglas deterministas para entornos de agentes y la filosofía de prompting riguroso orientada a tipos y contratos en TypeScript.
+* **[Poteto (Lauren Tan)](https://github.com/poteto)** ([@poteto](https://x.com/poteto)): Por su trabajo seminal en la formalización de *Agent Rules*, orquestación de subagentes especializados, higiene de contexto y diseño de directivas operativas para Claude Code y asistentes de código autónomos.
+* **[Paul Bakaus](https://github.com/pbakaus)** ([@pbakaus](https://x.com/pbakaus)) & **[Abdul Wahab](https://github.com/abdulwahabone)** ([@abdulwahabone](https://x.com/abdulwahabone)): Creadores y mantenedores de **[Impeccable](https://github.com/pbakaus/impeccable)**, el estándar y suite de diseño frontend, auditoría visual anti-patrones y combate radical al *AI slop* en interfaces web.
+* **[Turki Alshuaibi](https://github.com/turkia)** ([@turkia](https://x.com/turkia)): Creador de **[Foreman](https://github.com/turkia/foreman)**, el riguroso playbook procedimental de 8 compuertas que estructura la construcción web real sin alucinaciones para agentes autónomos.
+* **John Ousterhout**: Autor de *A Philosophy of Software Design*, cuyos conceptos de *Deep Modules*, interfaces limpias e invariantes de negocio fundamentan los estándares de `architect-guardian`.
+* **[Trail of Bits](https://github.com/trailofbits)** & **[Semgrep](https://github.com/semgrep/semgrep)**: Por la metodología de auditoría estática determinista y las reglas de seguridad de nivel de producción integradas en `security-auditor`.
+* **[NousResearch](https://github.com/NousResearch)**: Por la arquitectura de *Hermes Agent*, base conceptual de la destilación de skills procedurales en `hermes-auto-learner`.
+
