@@ -68,6 +68,7 @@ python C:/Users/Petiso/.gemini/config/plugins/debug-guardian/skills/debug-guardi
         ├── references/
         │   ├── root_cause_analysis.md          # Metodología RCA y anti-patrones
         │   ├── testing_patterns.md             # Patrones de pruebas (pytest, vitest, go, rust)
+        │   ├── independent_test_authorship.md  # Tests escritos por un subagente sin ver la implementacion
         │   └── debug_hygiene.md                # Checklist de higiene y limpieza de residuos
         └── scripts/
             └── debug_guard.py                  # Herramienta CLI en Python

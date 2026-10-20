@@ -2,7 +2,7 @@
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Pipin333%2FMikeMode-1B4DD1?style=flat&logo=github)](https://github.com/Pipin333/MikeMode)
 [![Status](https://img.shields.io/badge/Status-Public-success?style=flat)]()
-[![Plugins](https://img.shields.io/badge/Plugins-12%20Active-blue?style=flat)]()
+[![Plugins](https://img.shields.io/badge/Plugins-13%20Active-blue?style=flat)]()
 
 Repositorio público centralizado con los plugins, guardianes y skills globales para **Google Antigravity** y agentes de codificación compatibles (Gemini CLI, Claude Code, OpenCode, Codex).
 
@@ -19,6 +19,7 @@ Diseñado bajo la filosofía **Modo Mike™**: máxima profundidad modular, cero
 | **`graphify`** | Skill / Tool | Grafo de conocimiento interactivo (`graph.html`) y topología arquitectónica (`GRAPH_REPORT.md`) mediante AST determinista con Tree-sitter y detección de comunidades Louvain/Leiden. | Protocolo `SKILL.md`, análisis de *blast radius*, dependencias circulares, runner (`run_graphify.py`). |
 | **`office-forge`** | Skill / Tool | Motor programático de documentos corporativos Excel (`.xlsx` con fórmulas vivas), Word (`.docx`), PowerPoint (`.pptx`) y PDF con estética de banca de inversión y defensas anti-XXE / anti-Zip-bomb. | Protocolo `SKILL.md`, clases `ExcelForge`, `WordForge`, `PdfForge`, `PresentationForge` (`office_engine.py`). |
 | **`six-hats-council`** | Skill / Agentes | Deliberación técnica profunda combinando los Seis Sombreros de Bono y el consenso democrático estilo MAGI de Evangelion (Melchior-1, Balthasar-2, Caspar-3) con subagentes concurrentes. | Protocolo MAGI (`magi_protocol.md`), prompts de sombreros/MAGI, runner (`six_hats.py`). |
+| **`team-guardian`** | Guardián | Disciplina de equipo y honestidad de tests: Conventional Commits, ramas con prefijo, hook `commit-msg`, gate con perfiles (`prototype`/`product`) y bloqueo determinista ante cambios sensibles en tests sin justificación humana aprobada. | Reglas (`AGENTS.md`), validador de ramas/commits, detector de debilitamiento de tests, motor del gate (`team_guard.py`). |
 | **`debug-guardian`** | Guardián | Depuración rigurosa (RCA), prevención de regresiones mediante TDD e higiene de código (cero prints, console.log o breakpoints residuales). | Reglas (`AGENTS.md`), metodología RCA, detector de frameworks de test, scripts (`debug_guard.py`). |
 | **`doc-guardian`** | Guardián | Documentación técnica continua, sincronía del README y cumplimiento estricto de estándares de código (PEP 8, PEP 257 o equivalentes). Incluye compilador editorial a PDF. | Reglas (`AGENTS.md`), estándares de estilo/docstrings, scripts (`doc_guard.py`, `generate_perfect_pdf.py`). |
 | **`docker-guardian`** | Guardián | Containerización y portabilidad universal con Docker y Docker Compose para despliegue y clonación "1-click run" desde GitHub. | Reglas (`AGENTS.md`), plantillas multi-stage, devcontainer, scripts (`docker_guard.py`). |

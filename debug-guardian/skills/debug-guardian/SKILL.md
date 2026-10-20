@@ -33,6 +33,7 @@ Ante cualquier bug reportado:
 2. Escribe una prueba automatizada que replique la entrada o condición del fallo.
 3. Ejecuta la prueba y verifica que **falla** (`RED`). Esto demuestra que el problema ha sido capturado de forma determinista.
 - Consulta [Patrones de Testing](./references/testing_patterns.md) para tu ecosistema.
+4. **Autoría independiente**: en lógica de negocio, código crítico o si el usuario lo pide, el test lo escribe un subagente que recibe solo la especificación y la firma pública, sin ver la implementación. Los tests se congelan en rojo antes de implementar y no pueden modificarse para ponerlos en verde. Detalle y umbral de aplicación en [Autoría Independiente de Tests](./references/independent_test_authorship.md).
 
 ### Paso 2: Análisis de Causa Raíz (RCA)
 - Aplica la técnica de los **5 Porqués** para rastrear dónde se originó el dato defectuoso o la asunción inválida.
