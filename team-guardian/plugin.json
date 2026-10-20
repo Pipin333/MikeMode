@@ -1,0 +1,11 @@
+{
+  "name": "team-guardian",
+  "version": "0.1.0",
+  "displayName": "Team Guardian",
+  "description": "Disciplina de equipo para agentes: Conventional Commits, ramas con prefijo y una puerta que exige justificacion humana cuando el agente altera aserciones de tests.",
+  "suggestedPrompts": [
+    "Instala el hook de commits de Team-Guardian en este repositorio",
+    "Verifica si mis cambios debilitaron algun test y prepara la justificacion",
+    "Valida el nombre de esta rama y el mensaje de mi ultimo commit"
+  ]
+}

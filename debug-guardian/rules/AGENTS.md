@@ -11,6 +11,7 @@ Cada vez que soluciones un error, implementes una funcionalidad o refactorices c
 2. **Reproducción Previa y Prevención de Regresiones (Test-Driven Bugfixing)**:
    - **Paso 1: Test en Rojo**: Ante un bug confirmado, escribe primero un test automatizado (unitario o de integración) que reproduzca exactamente el fallo y falle de manera determinista.
    - **Paso 2: Corrección en Verde**: Modifica el código de negocio hasta que el test reproductor pase limpiamente.
+   - **Autoría Independiente (lógica de negocio y código crítico)**: el test debe escribirlo un subagente que solo reciba la especificación y la firma pública, sin acceso a la implementación. Los tests se congelan en rojo antes de implementar; está prohibido modificarlos, borrarlos o saltarlos para ponerlos en verde. Si un test parece incorrecto, detente y consulta al usuario. No aplica a cambios triviales.
    - **Paso 3: Suite Completa**: Ejecuta las pruebas existentes del módulo o proyecto para certificar que la solución no introdujo regresiones en otros flujos.
 
 3. **Higiene Estricta de Código (Cero Residuos de Depuración)**:
