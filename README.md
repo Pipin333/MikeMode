@@ -2,7 +2,7 @@
 
 [![GitHub Repo](https://img.shields.io/badge/GitHub-Pipin333%2FMikeMode-1B4DD1?style=flat&logo=github)](https://github.com/Pipin333/MikeMode)
 [![Status](https://img.shields.io/badge/Status-Public-success?style=flat)]()
-[![Plugins](https://img.shields.io/badge/Plugins-13%20Active-blue?style=flat)]()
+[![Plugins](https://img.shields.io/badge/Plugins-14%20Active-blue?style=flat)]()
 
 Repositorio público centralizado con los plugins, guardianes y skills globales para **Google Antigravity** y agentes de codificación compatibles (Gemini CLI, Claude Code, OpenCode, Codex).
 
@@ -27,6 +27,7 @@ Diseñado bajo la filosofía **Modo Mike™**: máxima profundidad modular, cero
 | **`hermes-auto-learner`** | Skill / Tool | Motor de auto-aprendizaje procedural, destilación en 1 solo turno (`/learn`) y auto-mutación conducida por fallos (*Failure-Driven Mutation*) inspirado en NousResearch Hermes Agent. | Protocolo `SKILL.md`, estándares Hardline ($\le 60$ caracteres), salvaguardas Balthasar-2, validador (`validate_skill.py`). |
 | **`impeccable`** | Skill Suite | Kit de diseño frontend y estándares de calidad visual anti-slop (creado por Paul Bakaus y Abdul Wahab). | Skills de auditoría visual (`critique`, `audit`, `polish`, `bolder`, `quiet`), inspección live, design systems. |
 | **`foreman`** | Playbook / Skill | Playbook de construcción y orquestación web para agentes (por Turki Alshuaibi). Entrevista de 8 compuertas, congelamiento de brief de diseño, verificación responsive (375px), despliegue DNS/SSL y metadatos (SEO, OpenGraph, sitemap, llms.txt). 100% Markdown puro. | Protocolo `SKILL.md`, compuertas 1 a 8, catálogo `vibe-coded-tells.md`, referencias y plantillas en `assets/`. |
+| **`opencode-bridge`** | Skill / Tool | Puente local con OpenCode Desktop para delegación de tareas hacia modelos gratuitos (DeepSeek V4.1 Flash, GLM-5.3 Flash, Nemotron 3.5, Ollama Qwen) con cero costo y sanitización de secretos. | Protocolo `SKILL.md`, comando `/delegate`, runner conector (`opencode_bridge.py`). |
 
 ---
 
@@ -55,6 +56,7 @@ Puedes invocar los siguientes flujos directamente escribiéndolos en el chat con
 | **`/learn`** o *"aprende este patrón"* | `hermes-auto-learner` | Destila la solución o flujo recién completado en un skill autónomo, guardándolo en `skills/<nombre>/SKILL.md` y validándolo contra las directivas de NousResearch y Balthasar-2. |
 | **`MAGI: <dilema>`** o *"consulta a MAGI"* | `six-hats-council` | Convoca a los 3 subagentes concurrentes del supercomputador MAGI (Melchior-1 Científica, Balthasar-2 Madre/Seguridad, Caspar-3 Mujer/Disruptora) para deliberar sobre decisiones arquitectónicas críticas. |
 | **`/critique`**, **`/audit`**, **`/polish`** | `impeccable` | Ejecuta una auditoría de diseño frontend sobre la interfaz activa, evaluando jerarquía visual, espaciado, tipografía, accesibilidad y proponiendo mejoras concretas. |
+| **`/delegate [modelo] [tarea]`** | `opencode-bridge` | Delega una tarea hacia modelos gratuitos de OpenCode (DeepSeek V4.1, GLM-5.3, Nemotron, Qwen) sin consumir tokens ni cuota de API, con sanitización de secretos. |
 | **"Ayúdame a construir mi portfolio"** / **"Crea una landing"** | `foreman` | Convierte al agente en capataz de obra web: ejecuta la entrevista de 8 pasos, congela el brief visual, audita responsive en 375px y guía el despliegue con dominio, SSL, 404 y SEO. |
 
 ---
@@ -328,6 +330,30 @@ Foreman opera como el director de obra web a través de un diálogo procedimenta
 
 ---
 
+### 13. 🌉 `opencode-bridge` — Puente Local y Delegación a OpenCode
+
+Script: `opencode-bridge/scripts/opencode_bridge.py`  
+*(Requiere OpenCode Desktop en ejecución en segundo plano)*
+
+```bash
+# Comprobar estado y conectividad del daemon de OpenCode (localhost:28894)
+python opencode-bridge/scripts/opencode_bridge.py status
+
+# Listar los modelos activos y gratuitos disponibles
+python opencode-bridge/scripts/opencode_bridge.py models
+
+# Delegar consulta analítica o de coding a DeepSeek V4.1 Flash (gratuito)
+python opencode-bridge/scripts/opencode_bridge.py ask -m deepseek-v4.1-flash-free -p "¿Cómo optimizar esta función?"
+
+# Delegar revisión arquitectónica profunda a GLM-5.3 Flash (gratuito)
+python opencode-bridge/scripts/opencode_bridge.py ask -m glm-5.3-flash-free -p "Evalúa la cohesión de este módulo"
+
+# Exportar la respuesta estructurada y bloque de pensamiento en JSON
+python opencode-bridge/scripts/opencode_bridge.py ask -m deepseek-v4.1-flash-free -p "Refactoriza este algoritmo" --json
+```
+
+---
+
 ## 🛠️ Instalación Rápida de Herramientas y Dependencias
 
 Para aprovechar al 100% las capacidades de auditoría estática (`semgrep`), grafos AST (`graphify`) y generación ofimática (`office-forge`), instala las siguientes herramientas en tu entorno:
@@ -408,6 +434,9 @@ python -m unittest discover -s architect-guardian/tests -p "test_*.py"
 
 # Ejecutar tests de doc-guardian (Auditoría de manifiestos y README)
 python -m unittest discover -s doc-guardian/tests -p "test_*.py"
+
+# Ejecutar tests de opencode-bridge (Sanitización y ciclo de vida de sesiones)
+python -m unittest discover -s opencode-bridge/tests -p "test_*.py"
 ```
 
 ---

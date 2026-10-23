@@ -1,0 +1,9 @@
+{
+  "name": "opencode-bridge",
+  "version": "1.0.0",
+  "description": "Puente local entre Antigravity y OpenCode Desktop para delegación de tareas hacia modelos gratuitos (DeepSeek V4.1 Flash, GLM-5.3 Flash, Nemotron 3.5) con cero consumo de cuota.",
+  "author": {
+    "name": "Felipe Riquelme & Antigravity"
+  },
+  "license": "MIT"
+}
